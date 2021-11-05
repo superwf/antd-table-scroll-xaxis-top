@@ -29,6 +29,8 @@
 - [x] esmodule
 - [x] ts type
 
+- [x] confirm peerDependencies and dependencies config in package.json
+
 ## 周边
 
 - [x] 测试覆盖率
