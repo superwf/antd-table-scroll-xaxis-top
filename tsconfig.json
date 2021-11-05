@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "lib": ["dom", "esnext"],
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "removeComments": false,
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "sourceMap": false,
+    "declaration": true,
+    "declarationDir": "lib",
+    "outDir": "lib",
+    "rootDir": ".",
+    "baseUrl": ".",
+    "strictPropertyInitialization": false,
+    "paths": {
+      "src/*": ["./src/*"],
+      "example/*": ["./example/*"]
+    }
+  },
+  "include": ["src", "jest.config.ts"]
+}

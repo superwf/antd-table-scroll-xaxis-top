@@ -1,0 +1,91 @@
+{
+  "name": "antd-table-scroll-xaxis-top",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "author": "superwf@gmail.com",
+  "scripts": {
+    "test": "jest",
+    "start": "NODE_ENV=development webpack serve -c webpack.config.ts",
+    "clean": "rimraf {module,dist,lib,type} -f",
+    "badge": "jest-coverage-badges output ./badge",
+    "build": "tsc -p tsconfig.lib.json && tsc -p tsconfig.module.json && tsc -p tsconfig.declaration.json && NODE_ENV=production webpack && NODE_ENV=production webpack -c webpack.config.independent.ts && cp type/* module/ && cp type/* dist/ && cp type/* lib/",
+    "prepublishOnly": "yarn test && yarn build && standard-version",
+    "prepare": "husky install"
+  },
+  "files": [
+    "module",
+    "dist",
+    "lib",
+    "type"
+  ],
+  "bugs": {
+    "url": "https://github.com/superwf/antd-table-scroll-xaxis-top/issues"
+  },
+  "homepage": "https://github.com/superwf/antd-table-scroll-xaxis-top",
+  "keywords": [
+    "antd",
+    "table",
+    "scroll",
+    "react-component",
+    "react",
+    "reactjs"
+  ],
+  "devDependencies": {
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.0",
+    "@commitlint/config-conventional": "^14.1.0",
+    "@commitlint/prompt-cli": "^14.1.0",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.1",
+    "@types/clean-webpack-plugin": "^0.1.3",
+    "@types/lodash": "^4.14.176",
+    "@types/react": "^17.0.34",
+    "@types/react-dom": "^17.0.11",
+    "@types/webpack-dev-server": "^4.3.1",
+    "@typescript-eslint/eslint-plugin": "^5.3.0",
+    "@typescript-eslint/parser": "^5.3.0",
+    "antd": "^4.16.13",
+    "antd3": "npm:antd@3.26.20",
+    "babel-loader": "^8.2.3",
+    "babel-preset-react-app": "^10.0.0",
+    "clean-webpack-plugin": "^4.0.0",
+    "eslint": "^8.1.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-react": "^1.1.7",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-jest": "^25.2.2",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.26.1",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-react-native": "^3.11.0",
+    "html-webpack-inject-externals-plugin": "^0.1.8",
+    "html-webpack-plugin": "^5.5.0",
+    "husky": "^7.0.4",
+    "jest-coverage-badges": "^1.1.2",
+    "lodash": "^4.17.21",
+    "prettier": "^2.4.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-refresh": "^0.10.0",
+    "typescript": "^4.4.4",
+    "webpack": "^5.61.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.4.0"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "antd": ">3",
+    "lodash": ">4",
+    "react": ">16.8"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  }
+}
