@@ -64,6 +64,13 @@ module.exports = {
     'import/prefer-default-export': 0,
     'react/react-in-jsx-scope': 'off',
     'react/jsx-filename-extension': [1, { extensions: ['.jsx', '.tsx'] }],
+
+    'react/jsx-props-no-spreading': [
+      2,
+      {
+        html: 'ignore',
+      },
+    ],
   },
   settings: {
     version: 'detect',

@@ -7,6 +7,8 @@
   "scripts": {
     "test": "jest",
     "start": "NODE_ENV=development webpack serve -c webpack.config.ts",
+    "build-demo": "NODE_ENV=production webpack",
+    "analyze": "ANALYZE=true yarn build-demo",
     "clean": "rimraf {module,dist,lib,type} -f",
     "badge": "jest-coverage-badges output ./badge",
     "build": "tsc -p tsconfig.lib.json && tsc -p tsconfig.module.json && tsc -p tsconfig.declaration.json && NODE_ENV=production webpack && NODE_ENV=production webpack -c webpack.config.independent.ts && cp type/* module/ && cp type/* dist/ && cp type/* lib/",
@@ -41,6 +43,7 @@
     "@types/lodash": "^4.14.176",
     "@types/react": "^17.0.34",
     "@types/react-dom": "^17.0.11",
+    "@types/webpack-bundle-analyzer": "^4.4.1",
     "@types/webpack-dev-server": "^4.3.1",
     "@typescript-eslint/eslint-plugin": "^5.3.0",
     "@typescript-eslint/parser": "^5.3.0",
@@ -71,6 +74,7 @@
     "react-refresh": "^0.10.0",
     "typescript": "^4.4.4",
     "webpack": "^5.61.0",
+    "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.4.0"
   },

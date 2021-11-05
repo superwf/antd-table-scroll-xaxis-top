@@ -4,14 +4,15 @@ import { Table, Card } from 'antd3'
 
 import { columns, dataSource } from './mockData'
 
-import { ScrollOnTableTop } from '.'
+import { AntdTableScrollXaxisTop } from '.'
 
-const App = () => (
-  <Card title={<h2>ant 3 example</h2>}>
-    <ScrollOnTableTop debugName="antd3" className="ant3-wrapper">
-      <Table scroll={{ x: 'auto' }} columns={columns} dataSource={dataSource} />
-    </ScrollOnTableTop>
-  </Card>
-)
-
-render(<App />, document.getElementById('app'))
+if ((global as any).antd3 && window.location.pathname === '/antd3.html') {
+  const App = () => (
+    <Card title={<h2>Antd 3 example</h2>}>
+      <AntdTableScrollXaxisTop debugName="antd3" className="ant3-wrapper">
+        <Table scroll={{ x: 'auto', y: 300 }} columns={columns} dataSource={dataSource} />
+      </AntdTableScrollXaxisTop>
+    </Card>
+  )
+  render(<App />, document.getElementById('app'))
+}

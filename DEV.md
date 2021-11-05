@@ -24,7 +24,7 @@
 ## 发布格式
 
 - [x] umd
-- [x] umd min for production
+- [x] umd min and sourceMap for production
 - [x] commonjs
 - [x] esmodule
 - [x] ts type

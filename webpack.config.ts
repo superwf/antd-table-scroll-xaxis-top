@@ -1,5 +1,6 @@
 import path from 'path'
 
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import type { Configuration } from 'webpack'
 import { DefinePlugin, ProvidePlugin } from 'webpack'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
@@ -27,19 +28,13 @@ export default async () => {
       publicPath: '/',
       filename: '[name].js',
       globalObject: 'window',
-      path: resolveRoot('dist'),
+      path: resolveRoot('demo'),
     },
     devServer: {
       historyApiFallback: true,
-      // inline: true,
       hot: true,
-      // hotOnly: true,
       compress: true,
-      // clientLogLevel: 'none',
-      // injectClient: true,
-      // quiet: false,
-      // disableHostCheck: true,
-      // contentBase: './public',
+      port: 3000,
       open: true,
       https: false,
       host: '0.0.0.0',
@@ -50,14 +45,15 @@ export default async () => {
     externals: {
       react: 'React',
       'react-dom': 'ReactDOM',
-      antd3: 'antd',
+      antd3: 'antd3',
+      lodash: '_',
       moment: 'moment',
       antd: 'antd',
     },
     module: {
       rules: [
         {
-          test: /\.(js|mjs|jsx|ts|tsx)$/,
+          test: /\.(ts|tsx)$/,
           include: [resolveRoot('src')],
           loader: 'babel-loader',
           options: {
@@ -66,75 +62,98 @@ export default async () => {
             compact: isProd,
           },
         },
-        // Process any JS outside of the app with Babel.
-        // Unlike the application JS, we only compile the standard ES features.
-        {
-          test: /\.(js|mjs)$/,
-          exclude: /@babel(?:\/|\\{1,2})runtime/,
-          loader: 'babel-loader',
-          options: {
-            babelrc: false,
-            configFile: false,
-            compact: false,
-            presets: [[require.resolve('babel-preset-react-app/dependencies'), { helpers: true }]],
-            cacheDirectory: true,
-            // See #6846 for context on why cacheCompression is disabled
-            cacheCompression: false,
-
-            // Babel sourcemaps are needed for debugging into node_modules
-            // code.  Without the options below, debuggers like VSCode
-            // show incorrect code and set breakpoints on the wrong lines.
-            sourceMaps: !isProd,
-            inputSourceMap: !isProd,
-          },
-        },
       ],
     },
-    plugins: [],
+    plugins: [
+      new ProvidePlugin({
+        Buffer: ['buffer', 'Buffer'],
+      }),
+      new DefinePlugin({
+        'process.env': {
+          NODE_ENV: `"${NODE_ENV}"`,
+        },
+      }),
+      new HtmlWebpackPlugin({
+        template: './public/antd3.html',
+        inject: true,
+        filename: 'antd3.html',
+        publicPath: '/',
+      }),
+      new HtmlWebpackPlugin({
+        template: './public/antd4.html',
+        inject: true,
+        filename: 'antd4.html',
+        publicPath: '/',
+      }),
+      new HtmlWebpackInjectExternalsPlugin({
+        host: 'https://unpkg.com',
+        packages: [
+          {
+            name: 'lodash',
+            path: `/lodash${isProd ? '.min' : ''}.js`,
+          },
+          {
+            name: 'moment',
+            path: `/min/moment-with-locales${isProd ? '.min' : ''}.js`,
+          },
+          {
+            name: 'react',
+            path: `/umd/react.${isProd ? 'production.min' : 'development'}.js`,
+          },
+          {
+            name: 'react-dom',
+            path: `/umd/react-dom.${isProd ? 'production.min' : 'development'}.js`,
+          },
+          {
+            name: 'antd3',
+            fullPath: `https://unpkg.com/antd@3.26.20/dist/antd-with-locales${isProd ? '.min' : ''}.js`,
+            injectAfter: {
+              tagName: 'script',
+              voidTag: false,
+              attributes: {},
+              innerHTML: `
+              window.antd3 = antd;
+              if (window.location.pathname === '/antd3.html') {
+                const l = document.createElement('link')
+                l.setAttribute('rel', 'stylesheet')
+                l.setAttribute('type', 'text/css')
+                l.setAttribute('href', 'https://unpkg.com/antd@3.26.20/dist/antd.min.css')
+                document.head.appendChild(l)
+              }
+            `,
+            },
+          },
+          {
+            name: 'antd',
+            path: `/dist/antd-with-locales${isProd ? '.min' : ''}.js`,
+            injectAfter: {
+              tagName: 'script',
+              voidTag: false,
+              attributes: {},
+              innerHTML: `
+              const l = document.createElement('link')
+              l.setAttribute('rel', 'stylesheet')
+              l.setAttribute('type', 'text/css')
+              l.setAttribute('href', 'https://unpkg.com/antd@4.16.13/dist/antd.min.css')
+              document.head.appendChild(l)
+            `,
+            },
+          },
+        ],
+      }),
+    ],
     devtool: 'source-map',
   }
-
-  config.plugins = [
-    new ProvidePlugin({
-      Buffer: ['buffer', 'Buffer'],
-    }),
-    new DefinePlugin({
-      'process.env': {
-        NODE_ENV: `"${NODE_ENV}"`,
-      },
-    }),
-    new HtmlWebpackPlugin({
-      template: './public/index.html',
-      inject: false,
-      publicPath: '/',
-    }),
-    new HtmlWebpackInjectExternalsPlugin({
-      host: 'https://unpkg.com',
-      packages: [
-        {
-          name: 'react',
-          path: `/umd/react.${isProd ? 'production.min' : 'development'}.js`,
-        },
-        {
-          name: 'react-dom',
-          path: `/umd/react-dom.${isProd ? 'production.min' : 'development'}.js`,
-        },
-        {
-          name: 'antd3',
-          fullPath: `https://unpkg.com/antd@3.26.20/dist/antd-with-locales${isProd ? '.min' : ''}.js`,
-        },
-        {
-          name: 'antd',
-          path: `/dist/antd-with-locales${isProd ? '.min' : ''}.js`,
-        },
-      ],
-    }),
-  ]
-
-  if (isProd) {
-    config.plugins.push(new CleanWebpackPlugin())
-  } else {
-    config.plugins.push(new ReactRefreshWebpackPlugin())
+  const { plugins } = config
+  if (plugins) {
+    if (isProd) {
+      plugins.push(new CleanWebpackPlugin())
+    } else {
+      plugins.push(new ReactRefreshWebpackPlugin())
+    }
+    if (process.env.ANALYZE) {
+      plugins.push(new BundleAnalyzerPlugin())
+    }
   }
 
   return config

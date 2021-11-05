@@ -9,19 +9,33 @@ Do not worry, laowang can help you 🤘, just try this one.
 Work with antd v3 and v4, automatically!
 
 - [scroll-antd-table-xaxis-top](#scroll-antd-table-xaxis-top)
+  - [Install](#Install)
+  - [How to use](#how-to-use)
   - [Example](#example)
     - [Before](#before)
     - [After](#After)
-  - [How to use](#how-to-use)
+  - [Api](#api)
+
+## Install
 
 ## Example
 
 ### Before
 
-![./before.gif](./before.gif)
+![./doc/before.gif](./doc/before.gif)
 
 ### After
 
-![./after.gif](./after.gif)
+![./doc/after.gif](./doc/after.gif)
 
 ## How to use
+
+## Api
+
+## General questions
+
+- Why my table does not has xaxis scroll bar after use this?
+
+  - Set each column with a confirm width, as `{ title: 'xxx', dataIndex: 'yyy', width: 200 }`
+
+  - Set Table prop `scroll`, as `scroll={{ x: 'max-content' }}`

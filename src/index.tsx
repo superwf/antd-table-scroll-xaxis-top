@@ -2,14 +2,15 @@ import { debounce } from 'lodash'
 import * as React from 'react'
 import type { UIEventHandler } from 'react'
 
-type Props = {
-  className?: string
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
+  /** for debug info, should not be used in production mode */
   debugName?: string
   /**
-   * antd Table 组件产生横向 scroll 的容器标识，可以被 querySelector 获取
-   * 默认为 '.ant-table-body'
+   * for antd ConfigProvider prop `prefixCls`
+   * Only use this when you custom a different prefixCls
+   * @default 'ant'
    * */
-  tableContentMarker?: string
+  prefixCls?: string
 }
 
 const { error } = console
@@ -26,6 +27,9 @@ const syncScrollLeft = (dom: HTMLElement, scrollLeft: number) => {
     dom.scrollLeft = scrollLeft
   }
 }
+
+const isAnt3Env = (wrapper: HTMLDivElement, prefixCls: string) =>
+  wrapper.querySelector(`.${prefixCls}-table-body > table`) !== null
 
 /**
  * 为单独移动顶部或底部scroll的时候加锁
@@ -61,19 +65,14 @@ const releaseIsScrollingBottom = debounce(() => {
  *  </ScrollOnTableTop>
  * ```
  * */
-export const ScrollOnTableTop: React.FC<Props> = ({
-  children,
-  debugName,
-  className,
-  tableContentMarker = '.ant-table-body',
-}) => {
+export const AntdTableScrollXaxisTop: React.FC<Props> = ({ children, debugName, prefixCls = 'ant', ...props }) => {
   /** 直接在jsx中可定义的结构，使用ref */
   const wrapperRef = React.useRef<HTMLDivElement>(null)
   const scrollBarRef = React.useRef<HTMLDivElement>(null)
   const scrollBarWrapperRef = React.useRef<HTMLDivElement>(null)
 
   const log = React.useCallback(
-    (str: string) => error(`${debugName} :: ScrollOnTableTop occurs error: ${str}`),
+    (str: string) => error(`${debugName} :: AntdTableScrollXaxisTop occurs error: ${str}`),
     [debugName],
   )
 
@@ -157,16 +156,18 @@ export const ScrollOnTableTop: React.FC<Props> = ({
   React.useEffect(() => {
     const wrapper = wrapperRef.current
     if (wrapper) {
-      const innerTableWrapperDom = wrapper.querySelector(tableContentMarker) as HTMLDivElement
+      const isAnt3 = isAnt3Env(wrapper, prefixCls)
+      const selector = isAnt3 ? `.${prefixCls}-table-body` : `.${prefixCls}-table-content`
+      const innerTableWrapperDom = wrapper.querySelector(selector) as HTMLDivElement
       if (innerTableWrapper !== innerTableWrapperDom) {
         setInnerTableWrapper(innerTableWrapperDom)
       }
       if (!innerTableWrapperDom && debugName) {
-        log(`"${tableContentMarker}" not found, make sure has antd Table component as children`)
+        log(`"${selector}" not found, make sure has antd Table component as children`)
       }
-      const innerTableDom = wrapper.querySelector(`${tableContentMarker} > table`) as HTMLTableElement
+      const innerTableDom = wrapper.querySelector(`${selector} > table`) as HTMLTableElement
       if (!innerTableDom && debugName) {
-        log(`"${tableContentMarker} > table" not found, make sure has antd Table component as children`)
+        log(`"${selector} > table" not found, make sure has antd Table component as children`)
       }
       if (innerTableDom !== innerTable) {
         setInnerTable(innerTableDom)
@@ -190,7 +191,7 @@ export const ScrollOnTableTop: React.FC<Props> = ({
   }, [innerTable, innerTableWrapper, bottomScrollListener, observer, log])
 
   return (
-    <div ref={wrapperRef} className={className}>
+    <div ref={wrapperRef} {...props}>
       <div style={scrollBarWrapperStyle} ref={scrollBarWrapperRef} onScroll={topScrollListener}>
         <div ref={scrollBarRef} style={scrollBarStyle} />
       </div>
