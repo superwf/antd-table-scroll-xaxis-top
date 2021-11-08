@@ -12,6 +12,9 @@ if ((global as any).antd3 && window.location.pathname === '/antd3.html') {
       <AntdTableScrollXaxisTop debugName="antd3" className="ant3-wrapper">
         <Table scroll={{ x: 'auto', y: 300 }} columns={columns} dataSource={dataSource} />
       </AntdTableScrollXaxisTop>
+      <AntdTableScrollXaxisTop>
+        <div />
+      </AntdTableScrollXaxisTop>
     </Card>
   )
   render(<App />, document.getElementById('app'))

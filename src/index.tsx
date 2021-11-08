@@ -2,6 +2,7 @@ import * as React from 'react'
 
 import { Props } from './type'
 import { useTableTopScroll } from './hook'
+import { errorText } from './constant'
 
 const scrollBarWrapperStyle: React.CSSProperties = {
   overflow: 'auto',
@@ -30,16 +31,32 @@ const scrollBarStyle: React.CSSProperties = {
  * ```
  * */
 export const AntdTableScrollXaxisTop: React.FC<Props> = ({ children, debugName, prefixCls = 'ant', ...props }) => {
-  const { wrapperRef, scrollBarWrapperRef, topScrollListener, scrollBarRef } = useTableTopScroll({
+  const { tableAriaId, wrapperRef, scrollBarWrapperRef, topScrollListener, scrollBarRef } = useTableTopScroll({
     debugName,
     prefixCls,
+    children,
   })
-  return (
-    <div ref={wrapperRef} {...props}>
-      <div style={scrollBarWrapperStyle} ref={scrollBarWrapperRef} onScroll={topScrollListener}>
-        <div ref={scrollBarRef} style={scrollBarStyle} />
+  if (children && React.isValidElement(children)) {
+    const table = React.cloneElement(children)
+    const tableId = table.props.id || tableAriaId
+    return (
+      <div ref={wrapperRef} {...props}>
+        <div
+          role="scrollbar"
+          aria-controls={tableId}
+          aria-valuenow={0}
+          style={scrollBarWrapperStyle}
+          ref={scrollBarWrapperRef}
+          onScroll={topScrollListener}
+        >
+          <div ref={scrollBarRef} style={scrollBarStyle} />
+        </div>
+        <table.type id={tableId} {...table.props} />
       </div>
-      {children}
-    </div>
-  )
+    )
+  }
+  if (process.env.NODE_ENV !== 'production') {
+    console.error(errorText)
+  }
+  return null
 }

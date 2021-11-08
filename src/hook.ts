@@ -1,11 +1,9 @@
-import type { UIEventHandler } from 'react'
 import { useEffect, useState, useRef, useCallback, useMemo } from 'react'
+import type { UIEventHandler } from 'react'
 
 import { Props } from './type'
-import { isAnt3Env, syncScrollLeft } from './helper'
+import { syncScrollLeft, getUniqId } from './helper'
 import { lock } from './lock'
-
-const { error } = console
 
 /** capsule all scroll logic in a hook */
 export const useTableTopScroll = ({ debugName, prefixCls }: Props) => {
@@ -13,8 +11,10 @@ export const useTableTopScroll = ({ debugName, prefixCls }: Props) => {
   const scrollBarRef = useRef<HTMLDivElement>(null)
   const scrollBarWrapperRef = useRef<HTMLDivElement>(null)
 
+  const tableAriaId = useMemo(getUniqId, [])
+
   const log = useCallback(
-    (str: string) => error(`${debugName} :: AntdTableScrollXaxisTop occurs error: ${str}`),
+    (str: string) => console.info(`${debugName} :: AntdTableScrollXaxisTop occurs error: ${str}`),
     [debugName],
   )
 
@@ -97,8 +97,7 @@ export const useTableTopScroll = ({ debugName, prefixCls }: Props) => {
   useEffect(() => {
     const wrapper = wrapperRef.current
     if (wrapper) {
-      const isAnt3 = isAnt3Env(wrapper, prefixCls)
-      const selector = isAnt3 ? `.${prefixCls}-table-body` : `.${prefixCls}-table-content`
+      const selector = `.${prefixCls}-table-body`
       const innerTableWrapperDom = wrapper.querySelector(selector) as HTMLDivElement
       if (innerTableWrapper !== innerTableWrapperDom) {
         setInnerTableWrapper(innerTableWrapperDom)
@@ -107,6 +106,7 @@ export const useTableTopScroll = ({ debugName, prefixCls }: Props) => {
         log(`"${selector}" not found, make sure has antd Table component as children`)
       }
       const innerTableDom = wrapper.querySelector(`${selector} > table`) as HTMLTableElement
+
       if (!innerTableDom && debugName) {
         log(`"${selector} > table" not found, make sure has antd Table component as children`)
       }
@@ -131,5 +131,5 @@ export const useTableTopScroll = ({ debugName, prefixCls }: Props) => {
     }
   }, [innerTable, innerTableWrapper, bottomScrollListener, observer, log])
 
-  return { wrapperRef, scrollBarWrapperRef, topScrollListener, scrollBarRef }
+  return { wrapperRef, scrollBarWrapperRef, topScrollListener, scrollBarRef, tableAriaId }
 }
