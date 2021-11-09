@@ -2,17 +2,9 @@
 const config = {
   presets: ['react-app'],
   plugins: [],
-  // plugins: [
-  //   [
-  //     {
-  //       extensions: ['.js', '.jsx', '.ts', '.tsx', '.es', '.es6', '.mjs'],
-  //     },
-  //   ],
-  // ],
 }
 
-const isEnvDev = process.env.NODE_ENV === 'development'
-if (isEnvDev) {
+if (process.env.NODE_ENV === 'development') {
   config.plugins.push('react-refresh/babel')
 }
 

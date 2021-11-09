@@ -47,7 +47,7 @@ module.exports = {
         ts: 'never',
         tsx: 'never',
         json: 'always',
-        config: 'always',
+        demo: 'always',
       },
     ],
     // disable eslint resolve import, let typescript handle it

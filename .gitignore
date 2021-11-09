@@ -4,3 +4,7 @@ node_modules
 demo
 dist
 coverage
+type
+module
+lib
+public/static

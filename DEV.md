@@ -6,7 +6,7 @@
 
 - [x] `package.json` 中配置发布源 `https://registry.npmjs.org`
 - [x] `package.json` 中配置 `husky`
-- [x] 限定安装源生成`yarn.lock`，添加`.npmrc`配置
+- [x] 限定安装源生成`yarn.lock`，使用公网源，添加`.npmrc`配置
 
 ## 构建环境
 
@@ -23,7 +23,6 @@
 
 ## 发布格式
 
-- [x] umd
 - [x] umd min and sourceMap for production
 - [x] commonjs
 - [x] esmodule

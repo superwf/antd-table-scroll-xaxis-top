@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "esnext",
+    "target": "ESNext",
     "lib": ["dom", "esnext"],
     "experimentalDecorators": true,
     "skipLibCheck": true,
@@ -16,15 +16,12 @@
     "esModuleInterop": true,
     "jsx": "react-jsx",
     "sourceMap": false,
-    "declaration": true,
-    "declarationDir": "lib",
     "outDir": "lib",
     "rootDir": ".",
     "baseUrl": ".",
     "strictPropertyInitialization": false,
     "paths": {
-      "src/*": ["./src/*"],
-      "example/*": ["./example/*"]
+      "src/*": ["./src/*"]
     }
   },
   "include": ["src", "jest.config.ts", "webpack.config.ts", "script", "playwright.config.ts"]
