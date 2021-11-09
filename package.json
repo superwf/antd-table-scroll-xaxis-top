@@ -1,6 +1,6 @@
 {
   "name": "antd-table-scroll-xaxis-top",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "lib/index.js",
   "types": "type/index.d.ts",
   "typings": "type/index.d.ts",
