@@ -6,8 +6,10 @@ import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import HtmlWebpackPlugin = require('html-webpack-plugin')
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 import { HtmlWebpackInjectExternalsPlugin } from 'html-webpack-inject-externals-plugin'
+import antd3Pkg from 'antd3/package.json'
+import antdPkg from 'antd/package.json'
 
-import { port, host, externals } from './config/devServer'
+import { port, host, externals, unpkgHost } from './config/devServer'
 import { resolveRoot } from './script/resolveRoot'
 
 type NodeEnvType = 'production' | 'development' | 'test'
@@ -71,16 +73,20 @@ const config: Configuration = {
       inject: true,
       filename: 'antd3.html',
       publicPath,
+      css: `<link rel="stylesheet" href="${isProd ? unpkgHost : '/static'}/antd@${
+        antd3Pkg.version
+      }/dist/antd.min.css">`,
     }),
     new HtmlWebpackPlugin({
       template: './public/antd4.html',
       inject: true,
       filename: 'antd4.html',
       publicPath,
+      css: `<link rel="stylesheet" href="${isProd ? unpkgHost : '/static'}/antd@${antdPkg.version}/dist/antd.min.css">`,
     }),
     new HtmlWebpackInjectExternalsPlugin({
-      host: '/demo',
-      local: true,
+      host: unpkgHost,
+      local: !isProd,
       localPrefix: isProd ? '/demo/static' : '/static',
       packages: [
         {
@@ -99,17 +105,9 @@ const config: Configuration = {
           name: 'react-dom',
           path: '/umd/react-dom.production.min.js',
         },
-        // {
-        //   name: 'antd3',
-        //   path: '/dist/antd.min.css',
-        // },
-        // {
-        //   name: 'antd',
-        //   path: '/dist/antd.min.css',
-        // },
         {
           name: 'antd3',
-          path: '/dist/antd-with-locales.min.js',
+          fullPath: `${unpkgHost}/antd@${antd3Pkg.version}/dist/antd-with-locales.min.js`,
           injectAfter: {
             tagName: 'script',
             voidTag: false,
@@ -131,8 +129,10 @@ const config: Configuration = {
 const { plugins } = config
 if (plugins) {
   if (isProd) {
+    plugins.push(new CleanWebpackPlugin())
+  } else {
     plugins.push(
-      new CleanWebpackPlugin(),
+      new ReactRefreshWebpackPlugin(),
       new CopyWebpackPlugin({
         patterns: [
           {
@@ -148,8 +148,6 @@ if (plugins) {
         ],
       }) as any,
     )
-  } else {
-    plugins.push(new ReactRefreshWebpackPlugin())
   }
   if (process.env.ANALYZE) {
     plugins.push(new BundleAnalyzerPlugin())

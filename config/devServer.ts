@@ -10,3 +10,5 @@ export const externals = {
   moment: 'moment',
   antd: 'antd',
 }
+
+export const unpkgHost = 'https://unpkg.com'
