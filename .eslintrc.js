@@ -47,6 +47,7 @@ module.exports = {
         ts: 'never',
         tsx: 'never',
         json: 'always',
+        config: 'always',
       },
     ],
     // disable eslint resolve import, let typescript handle it
@@ -71,6 +72,7 @@ module.exports = {
       },
     ],
     'no-console': 0,
+    '@typescript-eslint/no-non-null-assertion': 0,
   },
   settings: {
     version: 'detect',

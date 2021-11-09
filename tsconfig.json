@@ -27,5 +27,5 @@
       "example/*": ["./example/*"]
     }
   },
-  "include": ["src", "jest.config.ts", "webpack.config.ts"]
+  "include": ["src", "jest.config.ts", "webpack.config.ts", "script", "playwright.config.ts"]
 }

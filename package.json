@@ -6,6 +6,7 @@
   "author": "superwf@gmail.com",
   "scripts": {
     "test": "jest",
+    "e2e": "NODE_ENV=test playwright test src/index.spec.ts --headed",
     "start": "NODE_ENV=development webpack serve -c webpack.config.ts",
     "buildDemo": "NODE_ENV=production webpack",
     "analyze": "ANALYZE=true yarn buildDemo",
@@ -13,7 +14,7 @@
     "badge": "jest-coverage-badges output ./badge",
     "build": "tsc -p tsconfig.lib.json && tsc -p tsconfig.module.json && tsc -p tsconfig.declaration.json && NODE_ENV=production webpack && NODE_ENV=production webpack -c webpack.config.independent.ts && cp type/* module/ && cp type/* dist/ && cp type/* lib/",
     "prepublishOnly": "yarn test && yarn build && standard-version",
-    "prepare": "husky install"
+    "prepare": "husky install && playwright install"
   },
   "files": [
     "module",
@@ -38,6 +39,7 @@
     "@babel/core": "^7.16.0",
     "@commitlint/config-conventional": "^14.1.0",
     "@commitlint/prompt-cli": "^14.1.0",
+    "@playwright/test": "^1.16.3",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/react-hooks": "^7.0.2",
