@@ -73,8 +73,8 @@ const config: Configuration = {
       inject: true,
       filename: 'antd3.html',
       publicPath,
-      css: `<link rel="stylesheet" href="${isProd ? unpkgHost : '/static'}/antd@${
-        antd3Pkg.version
+      css: `<link rel="stylesheet" href="${isProd ? unpkgHost : '/static'}/antd${
+        isProd ? `@${antd3Pkg.version}` : '3'
       }/dist/antd.min.css">`,
     }),
     new HtmlWebpackPlugin({
@@ -82,7 +82,9 @@ const config: Configuration = {
       inject: true,
       filename: 'antd4.html',
       publicPath,
-      css: `<link rel="stylesheet" href="${isProd ? unpkgHost : '/static'}/antd@${antdPkg.version}/dist/antd.min.css">`,
+      css: `<link rel="stylesheet" href="${isProd ? unpkgHost : '/static'}/antd${
+        isProd ? `@${antdPkg.version}` : ''
+      }/dist/antd.min.css">`,
     }),
     new HtmlWebpackInjectExternalsPlugin({
       host: unpkgHost,
@@ -107,7 +109,8 @@ const config: Configuration = {
         },
         {
           name: 'antd3',
-          fullPath: `${unpkgHost}/antd@${antd3Pkg.version}/dist/antd-with-locales.min.js`,
+          fullPath: isProd ? `${unpkgHost}/antd@${antd3Pkg.version}/dist/antd-with-locales.min.js` : undefined,
+          path: isProd ? undefined : '/dist/antd-with-locales.min.js',
           injectAfter: {
             tagName: 'script',
             voidTag: false,
@@ -136,14 +139,12 @@ if (plugins) {
       new CopyWebpackPlugin({
         patterns: [
           {
-            from: './public/static/**/*',
-            // filter(filepath) {
-            //   return !filepath.endsWith('.html')
-            // },
-            // to: ({ absoluteFilename }) => {
-            //   console.log(absoluteFilename)
-            //   return absoluteFilename.replace('/public', '')
-            // },
+            from: resolveRoot('node_modules/antd3/dist/antd.min.css'),
+            to: resolveRoot('public/static/antd3/dist'),
+          },
+          {
+            from: resolveRoot('node_modules/antd/dist/antd.min.css'),
+            to: resolveRoot('public/static/antd/dist'),
           },
         ],
       }) as any,
