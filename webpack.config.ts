@@ -20,9 +20,9 @@ const config: Configuration = {
   },
   output: {
     path: resolveRoot('dist'),
-    filename: `index${isProd ? '.min' : ''}.js`,
+    filename: `index.umd${isProd ? '.min' : ''}.js`,
     library: {
-      type: 'window',
+      type: 'umd2',
       name: 'AntdTableScrollXaxisTop',
       export: 'default',
     },

@@ -2,12 +2,16 @@
   "name": "antd-table-scroll-xaxis-top",
   "version": "0.1.4",
   "main": "lib/index.js",
+  "description": "scroll table xaxis at top in ant design",
   "types": "type/index.d.ts",
   "typings": "type/index.d.ts",
   "module": "module/index.js",
-  "unpkg": "dist/index.js",
+  "unpkg": "dist/index.umd.min.js",
+  "browser": "dist/index.umd.min.js",
+  "umd:main": "dist/index.umd.min.js",
   "license": "MIT",
   "author": "superwf@gmail.com",
+  "sideEffects": false,
   "scripts": {
     "unit": "jest src/index.test.tsx",
     "e2e": "ts-node script/e2e.ts",
@@ -18,7 +22,7 @@
     "clean": "rimraf {module,dist,lib,type} -f",
     "badge": "jest-coverage-badges output ./badge",
     "build": "tsc -p tsconfig.lib.json && tsc -p tsconfig.module.json && tsc -p tsconfig.declaration.json && NODE_ENV=production webpack && NODE_ENV=development webpack && cp type/* module/ && cp type/* dist/ && cp type/* lib/",
-    "prepublishOnly": "yarn test && yarn e2e && yarn build && standard-version",
+    "prepublishOnly": "yarn test && yarn build && standard-version",
     "prepare": "husky install && playwright install"
   },
   "files": [
@@ -32,7 +36,7 @@
   },
   "homepage": "https://github.com/superwf/antd-table-scroll-xaxis-top",
   "keywords": [
-    "antd",
+    "ant-design",
     "table",
     "scroll",
     "react-component",
