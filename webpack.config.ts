@@ -2,26 +2,27 @@
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import type { Configuration } from 'webpack'
 import { DefinePlugin } from 'webpack'
-import { CleanWebpackPlugin } from 'clean-webpack-plugin'
+// import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 
 import { extensions } from './config/devServer'
 import { resolveRoot } from './script/resolveRoot'
 
 type NodeEnvType = 'production' | 'development' | 'test'
 
-const NODE_ENV: NodeEnvType = (process.env.NODE_ENV as NodeEnvType) || 'development'
+const NODE_ENV: NodeEnvType = process.env.NODE_ENV as NodeEnvType
+
+const isProd = NODE_ENV === 'production'
 
 // eslint-disable-next-line import/no-mutable-exports
 const config: Configuration = {
-  mode: 'production',
   entry: {
     index: [resolveRoot('src/index.tsx')],
   },
   output: {
     path: resolveRoot('dist'),
-    filename: 'index.js',
+    filename: `index${isProd ? '.min' : ''}.js`,
     library: {
-      type: 'var',
+      type: 'window',
       name: 'AntdTableScrollXaxisTop',
       export: 'default',
     },
@@ -30,6 +31,9 @@ const config: Configuration = {
   },
   resolve: {
     extensions,
+  },
+  optimization: {
+    minimize: isProd,
   },
   externals: {
     react: 'React',
@@ -60,7 +64,7 @@ const config: Configuration = {
 }
 const { plugins } = config
 if (plugins) {
-  plugins.push(new CleanWebpackPlugin())
+  // plugins.push(new CleanWebpackPlugin())
   if (process.env.ANALYZE) {
     plugins.push(new BundleAnalyzerPlugin())
   }

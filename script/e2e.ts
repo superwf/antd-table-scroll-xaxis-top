@@ -19,7 +19,7 @@ const runServer = async () => {
 }
 
 runServer().then(() => {
-  const child = spawn('./node_modules/.bin/playwright', ['test', 'src/index.spec.ts', '--headed'], {
+  const child = spawn('./node_modules/.bin/playwright', ['test', 'src/index.spec.ts' /* , '--headed' */], {
     stdio: 'inherit',
     env: { ...process.env, NODE_ENV: 'test' },
   })
