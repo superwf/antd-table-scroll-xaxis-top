@@ -60,3 +60,5 @@ export const AntdTableScrollXaxisTop: React.FC<Props> = ({ children, debugName, 
   }
   return null
 }
+
+export default AntdTableScrollXaxisTop
