@@ -22,7 +22,7 @@ const config: Configuration = {
     filename: 'index.js',
     library: {
       type: 'var',
-      name: 'mobxValue',
+      name: 'AntdTableScrollXaxisTop',
       export: 'default',
     },
     globalObject: 'window',
