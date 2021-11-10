@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "es2018",
     "lib": ["dom", "esnext"],
     "experimentalDecorators": true,
     "skipLibCheck": true,
