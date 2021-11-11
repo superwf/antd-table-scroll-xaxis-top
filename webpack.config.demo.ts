@@ -3,7 +3,7 @@ import CopyWebpackPlugin from 'copy-webpack-plugin'
 import type { Configuration } from 'webpack'
 import { DefinePlugin, ProvidePlugin } from 'webpack'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
-import HtmlWebpackPlugin = require('html-webpack-plugin')
+import HtmlWebpackPlugin from 'html-webpack-plugin'
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 import { HtmlWebpackInjectExternalsPlugin } from 'html-webpack-inject-externals-plugin'
 import antd3Pkg from 'antd3/package.json'
@@ -55,6 +55,7 @@ const config: Configuration = {
           cacheDirectory: true,
           cacheCompression: false,
           compact: isProd,
+          plugins: isProd ? [] : ['react-refresh/babel'],
         },
       },
     ],

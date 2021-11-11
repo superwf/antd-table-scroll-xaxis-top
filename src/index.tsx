@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 
 import { Props } from './type'
 import { useTableTopScroll } from './hook'

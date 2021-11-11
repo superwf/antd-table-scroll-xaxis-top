@@ -1,7 +1,7 @@
 {
   "name": "antd-table-scroll-xaxis-top",
-  "version": "0.1.6",
-  "main": "lib/index.js",
+  "version": "1.0.0",
+  "main": "dist/index.umd.js",
   "description": "scroll table xaxis at top in ant design",
   "types": "type/index.d.ts",
   "typings": "type/index.d.ts",
@@ -23,15 +23,17 @@
     "analyze": "ANALYZE=true yarn buildDemo",
     "clean": "rimraf {module,dist,lib,type} -f",
     "badge": "jest-coverage-badges output ./badge",
-    "build": "tsc -p tsconfig.lib.json && tsc -p tsconfig.module.json && tsc -p tsconfig.declaration.json && NODE_ENV=production webpack && NODE_ENV=development webpack && cp type/* module/ && cp type/* dist/ && cp type/* lib/",
+    "buildDistDevelopment": "NODE_ENV=development rollup -c rollup.config.js",
+    "buildDistProduction": "NODE_ENV=production rollup -c rollup.config.js",
+    "build": "tsc -p tsconfig.module.json && tsc -p tsconfig.declaration.json && yarn buildDistDevelopment && yarn buildDistProduction && cp type/* module/ && cp type/* dist/",
     "prepublishOnly": "yarn test && yarn build && standard-version",
     "prepare": "husky install && playwright install"
   },
   "files": [
     "module",
     "dist",
-    "lib",
-    "type"
+    "type",
+    "src"
   ],
   "bugs": {
     "url": "https://github.com/superwf/antd-table-scroll-xaxis-top/issues"
@@ -52,6 +54,11 @@
     "@commitlint/prompt-cli": "^14.1.0",
     "@playwright/test": "^1.16.3",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.1",
+    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-commonjs": "^21.0.1",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.0.6",
+    "@rollup/plugin-replace": "^3.0.0",
     "@testing-library/react": "^12.1.2",
     "@testing-library/react-hooks": "^7.0.2",
     "@types/clean-webpack-plugin": "^0.1.3",
@@ -92,6 +99,8 @@
     "react-refresh": "^0.10.0",
     "react-test-renderer": "^17.0.2",
     "resize-observer-polyfill": "^1.5.1",
+    "rollup": "^2.59.0",
+    "rollup-plugin-terser": "^7.0.2",
     "standard-version": "^9.3.2",
     "typescript": "^4.4.4",
     "webpack": "^5.61.0",
@@ -100,7 +109,7 @@
     "webpack-dev-server": "^4.4.0"
   },
   "dependencies": {
-    "lodash": "^4.1.0"
+    "lodash": ">=4.1.0"
   },
   "peerDependencies": {
     "antd": ">=3",

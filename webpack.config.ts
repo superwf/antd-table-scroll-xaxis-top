@@ -24,7 +24,7 @@ const config: Configuration = {
     library: {
       type: 'umd2',
       name: 'AntdTableScrollXaxisTop',
-      export: 'default',
+      export: 'AntdTableScrollXaxisTop',
     },
     globalObject: 'window',
     publicPath: '/',
