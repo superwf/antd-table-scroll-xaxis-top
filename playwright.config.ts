@@ -1,6 +1,13 @@
 import { PlaywrightTestConfig } from '@playwright/test'
 
 const config: PlaywrightTestConfig = {
+  webServer: {
+    env: {
+      NODE_ENV: 'development',
+    },
+    command: 'webpack serve -c webpack.config.demo.ts',
+    port: 3000,
+  },
   projects: [
     {
       name: 'Chrome Stable',

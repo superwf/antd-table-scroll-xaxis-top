@@ -1,3 +1,4 @@
+/** @deprecated, use playwright config instead */
 import { spawn } from 'child_process'
 
 import webpack from 'webpack'

@@ -2,13 +2,12 @@ import { test, expect } from '@playwright/test'
 import { capitalize } from 'lodash'
 
 import { sleep } from '../src/sleep'
-import { port, host } from '../config/testServer'
 
 const antdEnv = ['antd3', 'antd4']
 
 antdEnv.forEach(env => {
   test(`${env} sync top and bottom`, async ({ page }) => {
-    await page.goto(`http://${host}:${port}/${env}.html`)
+    await page.goto(`/${env}.html`)
     const title = page.locator('head title')
     await expect(title).toHaveText(`${capitalize(env)} example`)
     await sleep(1000)

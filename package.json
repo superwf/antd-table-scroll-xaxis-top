@@ -16,9 +16,9 @@
   "sideEffects": false,
   "scripts": {
     "unit": "jest src/index.test.tsx",
-    "e2e": "ts-node script/e2e.ts",
+    "e2e": "playwright test",
     "test": "yarn unit && yarn e2e",
-    "start": "NODE_ENV=development webpack serve -c webpack.config.demo.ts",
+    "start": "NODE_ENV=development OPEN=true webpack serve -c webpack.config.demo.ts",
     "buildDemo": "NODE_ENV=production webpack -c webpack.config.demo.ts",
     "analyze": "ANALYZE=true yarn buildDemo",
     "clean": "rimraf {module,dist,lib,type} -f",

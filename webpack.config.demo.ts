@@ -16,6 +16,7 @@ type NodeEnvType = 'production' | 'development' | 'test'
 
 const NODE_ENV: NodeEnvType = (process.env.NODE_ENV as NodeEnvType) || 'development'
 const isProd = NODE_ENV === 'production'
+const { OPEN } = process.env
 
 export const extensions = ['.js', '.jsx', '.ts', '.tsx']
 
@@ -37,7 +38,7 @@ const config: Configuration = {
     hot: true,
     compress: true,
     port,
-    open: true,
+    open: OPEN,
     https: false,
     host,
   },
