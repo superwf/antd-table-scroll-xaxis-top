@@ -15,6 +15,7 @@ Work with antd v3 and v4, automatically!
     - [After](#After)
     - [live](#live)
   - [Example](#Example)
+    - [From CDN](#from-cdn)
   - [Api](#api)
 
 ## Install
@@ -46,11 +47,30 @@ Worked with antd 3 / 4, and react > 16.8
 ```typescript
 import { Table, Card } from 'antd'
 import { AntdTableScrollXaxisTop } from 'antd-table-scroll-xaxis-top'
-
 // ... in compoent
   <AntdTableScrollXaxisTop>
     <Table scroll={{ x: 'max-content' }} columns={columns} dataSource={dataSource} pagination={false} />
   </AntdTableScrollXaxisTop>
+```
+
+### From CDN
+
+```html
+<script src="https://unpkg.com/antd-table-scroll-xaxis-top/dist/index.umd.min.js"></script>
+```
+
+Global var name is AntdTableScrollXaxisTop.
+
+The component is a property. Use it this way.
+
+```javascript
+const { AntdTableScrollXaxisTop } = window.AntdTableScrollXaxisTop
+```
+
+So the import way is always
+
+```typescript
+import { AntdTableScrollXaxisTop } from 'antd-table-scroll-xaxis-top'
 ```
 
 ## Api
