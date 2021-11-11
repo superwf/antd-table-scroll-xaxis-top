@@ -1,6 +1,6 @@
 {
   "name": "antd-table-scroll-xaxis-top",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/index.umd.js",
   "description": "scroll table xaxis at top in ant design",
   "types": "type/index.d.ts",
