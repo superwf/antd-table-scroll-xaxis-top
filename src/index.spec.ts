@@ -12,25 +12,25 @@ antdEnv.forEach(env => {
     await expect(title).toHaveText(`${capitalize(env)} example`)
     await sleep(1000)
     // top sync bottom
-    await page.evaluate(() => document.querySelector('[role="scrollbar"]')!.scroll(100, 0))
+    await page.$eval('[role="scrollbar"]', e => e.scroll(100, 0))
     await sleep(100)
-    let bottomScrollLeft = await page.evaluate(() => document.querySelector('.ant-table-body')!.scrollLeft)
+    let bottomScrollLeft = await page.$eval('.ant-table-body', e => e.scrollLeft)
     expect(bottomScrollLeft).toBe(100)
 
-    await page.evaluate(() => document.querySelector('[role="scrollbar"]')!.scroll(200, 0))
+    await page.$eval('[role="scrollbar"]', e => e.scroll(200, 0))
     await sleep(100)
-    bottomScrollLeft = await page.evaluate(() => document.querySelector('.ant-table-body')!.scrollLeft)
+    bottomScrollLeft = await page.$eval('.ant-table-body', e => e.scrollLeft)
     expect(bottomScrollLeft).toBe(200)
 
     // bottom sync top
-    await page.evaluate(() => document.querySelector('.ant-table-body')!.scroll(120, 0))
+    await page.$eval('.ant-table-body', e => e.scroll(120, 0))
     await sleep(100)
-    let topScrollLeft = await page.evaluate(() => document.querySelector('[role="scrollbar"]')!.scrollLeft)
+    let topScrollLeft = await page.$eval('[role="scrollbar"]', e => e.scrollLeft)
     expect(topScrollLeft).toBe(120)
 
-    await page.evaluate(() => document.querySelector('.ant-table-body')!.scroll(220, 0))
+    await page.$eval('.ant-table-body', e => e.scroll(220, 0))
     await sleep(100)
-    topScrollLeft = await page.evaluate(() => document.querySelector('[role="scrollbar"]')!.scrollLeft)
+    topScrollLeft = await page.$eval('[role="scrollbar"]', e => e.scrollLeft)
     expect(topScrollLeft).toBe(220)
   })
 })
