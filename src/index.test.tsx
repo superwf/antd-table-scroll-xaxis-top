@@ -39,7 +39,7 @@ describe('AntdTableScrollXaxisTop', () => {
       const app = render(<App />)
       const topScroll = await app.findByRole('scrollbar')
       expect(topScroll.scrollLeft).toBe(0)
-      const tableWrapper = document.querySelector('.ant-table-body')
+      const tableWrapper = document.querySelector('table')!.parentElement
       assertIsDefined(tableWrapper)
       const scrollByTop = 120
       topScroll.scrollLeft = scrollByTop
@@ -52,7 +52,7 @@ describe('AntdTableScrollXaxisTop', () => {
       const app = render(<App />)
       const topScroll = await app.findByRole('scrollbar')
       expect(topScroll.scrollLeft).toBe(0)
-      const tableWrapper = document.querySelector('.ant-table-body')
+      const tableWrapper = document.querySelector('table')!.parentElement
       assertIsDefined(tableWrapper)
       const scrollByBottom = 120
       tableWrapper.scrollLeft = scrollByBottom
@@ -89,7 +89,7 @@ describe('AntdTableScrollXaxisTop', () => {
       const app = render(<App />)
       const topScroll = await app.findByRole('scrollbar')
       expect(topScroll.scrollLeft).toBe(0)
-      const tableWrapper = document.querySelector('.ant-table-body')
+      const tableWrapper = document.querySelector('table')!.parentElement
       assertIsDefined(tableWrapper)
       const scrollByTop = 120
       topScroll.scrollLeft = scrollByTop
@@ -102,7 +102,7 @@ describe('AntdTableScrollXaxisTop', () => {
       const app = render(<App />)
       const topScroll = await app.findByRole('scrollbar')
       expect(topScroll.scrollLeft).toBe(0)
-      const tableWrapper = document.querySelector('.ant-table-body')
+      const tableWrapper = document.querySelector('table')!.parentElement
       assertIsDefined(tableWrapper)
       const scrollByBottom = 120
       tableWrapper.scrollLeft = scrollByBottom
@@ -162,7 +162,7 @@ describe('AntdTableScrollXaxisTop', () => {
         fireEvent(button, new MouseEvent('click', {}))
       })
       const topScroll = await app.findByRole('scrollbar')
-      const tableWrapper = document.querySelector('.ant-table-body')
+      const tableWrapper = document.querySelector('table')!.parentElement
       assertIsDefined(tableWrapper)
       topScroll.scrollLeft = 10
       fireEvent(topScroll, new UIEvent('scroll', {}))
@@ -197,7 +197,7 @@ describe('AntdTableScrollXaxisTop', () => {
       )
       const app = render(<DebugApp />)
       await app.findByRole('scrollbar')
-      expect(consoleInfo).toHaveBeenCalledTimes(2)
+      expect(consoleInfo).toHaveBeenCalledTimes(1)
 
       console.info = info
       app.unmount()

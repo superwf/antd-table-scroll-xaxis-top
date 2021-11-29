@@ -6,7 +6,7 @@ import { syncScrollLeft, getUniqId } from './helper'
 import { lock } from './lock'
 
 /** capsule all scroll logic in a hook */
-export const useTableTopScroll = ({ debugName, prefixCls }: Props) => {
+export const useTableTopScroll = ({ debugName }: Props) => {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const scrollBarRef = useRef<HTMLDivElement>(null)
   const scrollBarWrapperRef = useRef<HTMLDivElement>(null)
@@ -97,28 +97,26 @@ export const useTableTopScroll = ({ debugName, prefixCls }: Props) => {
   useEffect(() => {
     const wrapper = wrapperRef.current
     if (wrapper) {
-      const selector = `.${prefixCls}-table-body`
-      const innerTableWrapperDom = wrapper.querySelector(selector) as HTMLDivElement
-      if (innerTableWrapper !== innerTableWrapperDom) {
-        setInnerTableWrapper(innerTableWrapperDom)
-      }
-      if (!innerTableWrapperDom && debugName) {
-        log(`"${selector}" not found, make sure has antd Table component as children`)
-      }
-      const innerTableDom = wrapper.querySelector(`${selector} > table`) as HTMLTableElement
+      const innerTableDom = wrapper.querySelector(`table`) as HTMLTableElement
+      if (!innerTableDom) {
+        if (debugName) {
+          log(`"table" not found, make sure has antd Table component as children`)
+        }
+      } else {
+        const innerTableWrapperDom = innerTableDom.parentElement as HTMLDivElement
+        if (innerTableWrapperDom) {
+          setInnerTableWrapper(innerTableWrapperDom)
+        }
+        if (innerTableDom !== innerTable) {
+          setInnerTable(innerTableDom)
+        }
 
-      if (!innerTableDom && debugName) {
-        log(`"${selector} > table" not found, make sure has antd Table component as children`)
-      }
-      if (innerTableDom !== innerTable) {
-        setInnerTable(innerTableDom)
-      }
-
-      if (innerTableWrapper && innerTable) {
-        observer.observe(innerTable, {
-          box: 'border-box',
-        })
-        innerTableWrapper.addEventListener('scroll', bottomScrollListener)
+        if (innerTableWrapper && innerTable) {
+          observer.observe(innerTable, {
+            box: 'border-box',
+          })
+          innerTableWrapper.addEventListener('scroll', bottomScrollListener)
+        }
       }
     }
     return () => {

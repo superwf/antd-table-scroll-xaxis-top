@@ -4,9 +4,8 @@ export interface Props extends React.HTMLAttributes<HTMLDivElement> {
   /** for debug info, should not be used in production mode */
   debugName?: string
   /**
-   * for antd ConfigProvider prop `prefixCls`
-   * Only use this when you custom a different prefixCls
-   * @default 'ant'
+   * @deprecated
+   * useless from 1.0.2
    * */
   prefixCls?: string
   children: ReactElement<any>
