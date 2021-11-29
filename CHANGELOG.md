@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.2](https://github.com/superwf/antd-table-scroll-xaxis-top/compare/v1.0.1...v1.0.2) (2021-11-29)
+
+
+### Bug Fixes
+
+* table wrapper selector ([a6b54fd](https://github.com/superwf/antd-table-scroll-xaxis-top/commit/a6b54fd992328de8eb2e0d61e43f34b0564579d7))
+
 ### [1.0.1](https://github.com/superwf/antd-table-scroll-xaxis-top/compare/v0.1.6...v1.0.1) (2021-11-11)
 
 ### [0.1.6](https://github.com/superwf/antd-table-scroll-xaxis-top/compare/v0.1.5...v0.1.6) (2021-11-10)
