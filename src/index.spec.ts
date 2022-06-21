@@ -23,12 +23,12 @@ antdEnv.forEach(env => {
     expect(bottomScrollLeft).toBe(200)
 
     // bottom sync top
-    await page.$eval('table', e => (e.parentNode as any).scroll(120, 0))
+    await page.$eval('.ant-table-body table', e => (e.parentNode as any).scroll(120, 0))
     await sleep(100)
     let topScrollLeft = await page.$eval('[role="scrollbar"]', e => e.scrollLeft)
     expect(topScrollLeft).toBe(120)
 
-    await page.$eval('table', e => (e.parentNode as any).scroll(220, 0))
+    await page.$eval('.ant-table-body table', e => (e.parentNode as any).scroll(220, 0))
     await sleep(100)
     topScrollLeft = await page.$eval('[role="scrollbar"]', e => e.scrollLeft)
     expect(topScrollLeft).toBe(220)

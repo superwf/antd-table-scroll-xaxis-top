@@ -1,9 +1,10 @@
-export const columns = Array(3)
+export const columns: any = Array(6)
   .fill(1)
   .map((_v, i) => ({
     title: `title${i + 1}`,
     dataIndex: `title${i + 1}`,
     width: 1000,
+    fixed: i > 4 ? 'right' : undefined,
   }))
 
 export const dataSource = Array(20)

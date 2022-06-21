@@ -71,7 +71,7 @@
     "@types/webpack-dev-server": "^4.3.1",
     "@typescript-eslint/eslint-plugin": "^5.3.0",
     "@typescript-eslint/parser": "^5.3.0",
-    "antd": "^4.16.13",
+    "antd": "^4.21.3",
     "antd3": "npm:antd@3.26.20",
     "babel-loader": "^8.2.3",
     "babel-preset-react-app": "^10.0.0",

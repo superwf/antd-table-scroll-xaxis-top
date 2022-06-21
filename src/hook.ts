@@ -97,7 +97,8 @@ export const useTableTopScroll = ({ debugName }: Props) => {
   useEffect(() => {
     const wrapper = wrapperRef.current
     if (wrapper) {
-      const innerTableDom = wrapper.querySelector(`table`) as HTMLTableElement
+      const innerTableDoms = wrapper.querySelectorAll(`table`)
+      const innerTableDom = innerTableDoms.length > 1 ? innerTableDoms[1] : innerTableDoms[0]
       if (!innerTableDom) {
         if (debugName) {
           log(`"table" not found, make sure has antd Table component as children`)
@@ -127,7 +128,7 @@ export const useTableTopScroll = ({ debugName }: Props) => {
         innerTableWrapper.removeEventListener('scroll', bottomScrollListener)
       }
     }
-  }, [innerTable, innerTableWrapper, bottomScrollListener, observer, log])
+  }, [innerTable, innerTableWrapper, bottomScrollListener, observer, log, debugName])
 
   return { wrapperRef, scrollBarWrapperRef, topScrollListener, scrollBarRef, tableAriaId }
 }

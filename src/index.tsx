@@ -30,10 +30,9 @@ const scrollBarStyle: React.CSSProperties = {
  *  </ScrollOnTableTop>
  * ```
  * */
-export const AntdTableScrollXaxisTop: React.FC<Props> = ({ children, debugName, prefixCls = 'ant', ...props }) => {
+export const AntdTableScrollXaxisTop: React.FC<Props> = ({ children, debugName, ...props }) => {
   const { tableAriaId, wrapperRef, scrollBarWrapperRef, topScrollListener, scrollBarRef } = useTableTopScroll({
     debugName,
-    prefixCls,
     children,
   })
   if (children && React.isValidElement(children)) {
