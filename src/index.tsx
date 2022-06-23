@@ -8,7 +8,7 @@ const scrollBarWrapperStyle: React.CSSProperties = {
   overflow: 'auto',
 }
 const scrollBarStyle: React.CSSProperties = {
-  height: '1em',
+  height: '1px',
 }
 
 /**
