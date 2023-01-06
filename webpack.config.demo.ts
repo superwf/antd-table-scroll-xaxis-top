@@ -6,10 +6,8 @@ import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 import { HtmlWebpackInjectExternalsPlugin } from 'html-webpack-inject-externals-plugin'
-import antd3Pkg from 'antd3/package.json'
-import antdPkg from 'antd/package.json'
 
-import { port, host, externals, unpkgHost } from './config/devServer'
+import { extensions, port, host, externals, unpkgHost } from './config/devServer'
 import { resolveRoot } from './script/resolveRoot'
 
 type NodeEnvType = 'production' | 'development' | 'test'
@@ -18,14 +16,11 @@ const NODE_ENV: NodeEnvType = (process.env.NODE_ENV as NodeEnvType) || 'developm
 const isProd = NODE_ENV === 'production'
 const { OPEN } = process.env
 
-export const extensions = ['.js', '.jsx', '.ts', '.tsx']
-
 const publicPath = isProd ? '/demo' : '/'
 
 const config: Configuration = {
   entry: {
-    antd3: [resolveRoot('src/antd3.tsx')],
-    antd4: [resolveRoot('src/antd4.tsx')],
+    demo: [resolveRoot('src/demo.tsx')],
   },
   output: {
     publicPath,
@@ -38,7 +33,7 @@ const config: Configuration = {
     hot: true,
     compress: true,
     port,
-    open: OPEN,
+    open: Boolean(OPEN),
     https: false,
     host,
   },
@@ -59,6 +54,10 @@ const config: Configuration = {
           plugins: isProd ? [] : ['react-refresh/babel'],
         },
       },
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
     ],
   },
   plugins: [
@@ -71,22 +70,10 @@ const config: Configuration = {
       },
     }),
     new HtmlWebpackPlugin({
-      template: './public/antd3.html',
+      template: './public/index.html',
       inject: true,
-      filename: 'antd3.html',
+      filename: 'index.html',
       publicPath,
-      css: `<link rel="stylesheet" href="${isProd ? unpkgHost : '/static'}/antd${
-        isProd ? `@${antd3Pkg.version}` : '3'
-      }/dist/antd.min.css">`,
-    }),
-    new HtmlWebpackPlugin({
-      template: './public/antd4.html',
-      inject: true,
-      filename: 'antd4.html',
-      publicPath,
-      css: `<link rel="stylesheet" href="${isProd ? unpkgHost : '/static'}/antd${
-        isProd ? `@${antdPkg.version}` : ''
-      }/dist/antd.min.css">`,
     }),
     new HtmlWebpackInjectExternalsPlugin({
       host: unpkgHost,
@@ -103,24 +90,11 @@ const config: Configuration = {
         },
         {
           name: 'react',
-          path: '/umd/react.production.min.js',
+          path: `/umd/react.${isProd ? 'production.min' : 'development'}.js`,
         },
         {
           name: 'react-dom',
-          path: '/umd/react-dom.production.min.js',
-        },
-        {
-          name: 'antd3',
-          fullPath: isProd ? `${unpkgHost}/antd@${antd3Pkg.version}/dist/antd-with-locales.min.js` : undefined,
-          path: isProd ? undefined : '/dist/antd-with-locales.min.js',
-          injectAfter: {
-            tagName: 'script',
-            voidTag: false,
-            attributes: {},
-            innerHTML: `
-              window.antd3 = antd;
-            `,
-          },
+          path: `/umd/react-dom.${isProd ? 'production.min' : 'development'}.js`,
         },
         {
           name: 'antd',
@@ -140,10 +114,6 @@ if (plugins) {
       new ReactRefreshWebpackPlugin(),
       new CopyWebpackPlugin({
         patterns: [
-          {
-            from: resolveRoot('node_modules/antd3/dist/antd.min.css'),
-            to: resolveRoot('public/static/antd3/dist'),
-          },
           {
             from: resolveRoot('node_modules/antd/dist/antd.min.css'),
             to: resolveRoot('public/static/antd/dist'),

@@ -1,11 +1,28 @@
 export const columns: any = Array(6)
   .fill(1)
-  .map((_v, i) => ({
-    title: `title${i + 1}`,
-    dataIndex: `title${i + 1}`,
-    width: 1000,
-    fixed: i > 4 ? 'right' : undefined,
-  }))
+  .map((_v, i) => {
+    const col: any = {
+      title: `title${i + 1}`,
+      dataIndex: `title${i + 1}`,
+      width: 400,
+      fixed: i > 4 ? 'right' : undefined,
+    }
+    if (i < 2) {
+      col.children = [
+        {
+          title: `title${i + 1}-1`,
+          width: 300,
+          dataIndex: `title${i + 1}`,
+        },
+        {
+          title: `title${i + 1}-2`,
+          width: 300,
+          dataIndex: `title${i + 1}-2`,
+        },
+      ]
+    }
+    return col
+  })
 
 export const dataSource = Array(20)
   .fill(1)

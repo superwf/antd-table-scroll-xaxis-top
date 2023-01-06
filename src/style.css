@@ -1,0 +1,41 @@
+.atsxt-wrapper {
+  position: relative;
+}
+.atsxt-controller {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100%);
+  padding: 1em;
+  border: 1px solid black;
+  z-index: 10;
+  display: flex;
+  column-gap: 4px;
+
+  opacity: 0;
+  visibility: hidden;
+  padding: 1em;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+}
+
+.atsxt-wrapper:hover .atsxt-controller {
+  z-index: 10;
+  opacity: 1;
+  visibility: visible;
+  transition: all 0.5s cubic-bezier(0.75, -0.02, 0.2, 0.97);
+}
+
+.atsxt-controller-checkbox {
+  margin-left: 1em;
+  margin-right: 0.2em;
+}
+.atsxt-scroll-bar-wrapper {
+  overflow: auto;
+}
+
+.atsxt-scroll-bar {
+  height: 1px;
+}
+.atsxt-controller-label {
+  white-space: nowrap;
+}

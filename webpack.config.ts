@@ -1,4 +1,5 @@
 /* this file build umd mode only for production */
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import type { Configuration } from 'webpack'
 import { DefinePlugin } from 'webpack'
@@ -12,6 +13,12 @@ type NodeEnvType = 'production' | 'development' | 'test'
 const NODE_ENV: NodeEnvType = process.env.NODE_ENV as NodeEnvType
 
 const isProd = NODE_ENV === 'production'
+
+const styleLoader = isProd
+  ? MiniCssExtractPlugin.loader
+  : {
+      loader: 'style-loader',
+    }
 
 // eslint-disable-next-line import/no-mutable-exports
 const config: Configuration = {
@@ -50,6 +57,19 @@ const config: Configuration = {
           cacheCompression: false,
           compact: true,
         },
+      },
+      {
+        test: /\.css$/,
+        use: [
+          styleLoader,
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true,
+            },
+          },
+        ],
+        include: [resolveRoot('src')],
       },
     ],
   },

@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useCallback, useMemo } from 'react'
 import type { UIEventHandler } from 'react'
 
-import { Props } from './type'
+import { Props, TablePropsAny, UseControlColumnsReturn } from './type'
 import { syncScrollLeft, getUniqId } from './helper'
 import { lock } from './lock'
 
@@ -131,4 +131,40 @@ export const useTableTopScroll = ({ debugName }: Props) => {
   }, [innerTable, innerTableWrapper, bottomScrollListener, observer, log, debugName])
 
   return { wrapperRef, scrollBarWrapperRef, topScrollListener, scrollBarRef, tableAriaId }
+}
+
+export const useControlColumns = (
+  use: boolean | undefined,
+  children: React.ReactElement<any>,
+): UseControlColumnsReturn => {
+  const { columns } = children.props as TablePropsAny
+  // const [showControl, setShowControl] = useState(false)
+
+  const [keySet, setKeySet] = useState(new Set<string>())
+
+  if (use) {
+    return {
+      columns: (columns || []).filter((c: any) => {
+        const key = c.key || c.dataIndex
+        return !keySet.has(key)
+      }),
+      // onHeaderRow() {
+      //   return {
+      //     onMouseEnter() {
+      //       setShowControl(true)
+      //     },
+      //     onMouseLeave: debounce(() => {
+      //       setTimeout(() => {
+      //         setShowControl(false)
+      //       }, 600)
+      //     }, 600),
+      //   }
+      // },
+      // showControl,
+      // setShowControl,
+      keySet,
+      setKeySet,
+    }
+  }
+  return { columns, keySet, setKeySet }
 }

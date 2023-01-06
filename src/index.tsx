@@ -1,15 +1,10 @@
 import React from 'react'
 
 import { Props } from './type'
-import { useTableTopScroll } from './hook'
+import { useTableTopScroll, useControlColumns } from './hook'
+import { ColumnController } from './ColumnController'
 import { errorText } from './constant'
-
-const scrollBarWrapperStyle: React.CSSProperties = {
-  overflow: 'auto',
-}
-const scrollBarStyle: React.CSSProperties = {
-  height: '1px',
-}
+import './style.css'
 
 /**
  * use a top scroll bar to sync the bottom xaxis scroll bar.
@@ -30,27 +25,31 @@ const scrollBarStyle: React.CSSProperties = {
  *  </ScrollOnTableTop>
  * ```
  * */
-export const AntdTableScrollXaxisTop: React.FC<Props> = ({ children, debugName, ...props }) => {
+export const AntdTableScrollXaxisTop: React.FC<Props> = ({ children, debugName, controlColumns, ...props }) => {
   const { tableAriaId, wrapperRef, scrollBarWrapperRef, topScrollListener, scrollBarRef } = useTableTopScroll({
     debugName,
     children,
   })
+  const { keySet, setKeySet, ...controlColumnProps } = useControlColumns(controlColumns, children)
   if (children && React.isValidElement(children)) {
-    const table = React.cloneElement(children)
+    const table = React.cloneElement<Record<string, any>>(children as any)
     const tableId = table.props.id || tableAriaId
+
+    const originColumns = table.props.columns
     return (
-      <div ref={wrapperRef} {...props}>
+      <div ref={wrapperRef} {...props} className={`atsxt-wrapper ${props.className || ''}`}>
         <div
           role="scrollbar"
           aria-controls={tableId}
           aria-valuenow={0}
-          style={scrollBarWrapperStyle}
           ref={scrollBarWrapperRef}
           onScroll={topScrollListener}
+          className="atsxt-scroll-bar-wrapper"
         >
-          <div ref={scrollBarRef} style={scrollBarStyle} />
+          <div ref={scrollBarRef} className="atsxt-scroll-bar" />
         </div>
-        <table.type id={tableId} {...table.props} />
+        <table.type id={tableId} {...table.props} {...controlColumnProps} />
+        <ColumnController keySet={keySet} setKeySet={setKeySet} columns={originColumns} />
       </div>
     )
   }
