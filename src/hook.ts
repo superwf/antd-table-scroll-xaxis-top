@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef, useCallback, useMemo } from 'react'
+import { noop } from 'lodash'
 import type { UIEventHandler } from 'react'
 
 import { Props, TablePropsAny, UseControlColumnsReturn } from './type'
@@ -135,10 +136,34 @@ export const useTableTopScroll = ({ debugName }: Props) => {
   return { wrapperRef, scrollBarWrapperRef, topScrollListener, scrollBarRef, tableAriaId }
 }
 
+export const generateStorage = (storeKey?: string): {
+  getItem: () => any
+  setItem: (v: any) => void
+} => {
+  if (!storeKey) {
+    return {
+      setItem: noop,
+      getItem: noop,
+    }
+  }
+  return {
+    setItem(v: any) {
+      localStorage.setItem(storeKey, JSON.stringify(v))
+    },
+    getItem() {
+      const str = localStorage.getItem(storeKey)
+      return str ? JSON.parse(str) : {}
+    },
+  }
+}
+
 export const useControlColumns = (
   use: boolean | undefined,
   children: React.ReactElement<TablePropsAny>,
-): UseControlColumnsReturn => {
+  storeKey?: string,
+): UseControlColumnsReturn & {
+  setItem: (v: any) => void
+} => {
   const columns = children.props.columns || EMPTY_COLUMNS
   // 控制是否显示column
   const [excludeKeySet, setExcludeKeySet] = useState(new Set<string>())
@@ -202,6 +227,27 @@ export const useControlColumns = (
 
   const [fixed, setFixed] = useState(initialFixed)
 
+  const { setItem, getItem } = generateStorage(storeKey)
+  useEffect(() => {
+    const { excludeKeySet: storedExcludeKeySet, columnKeys: storedColumnKeys, childrenMapKeys: storedChildrenMapKeys, fixed: storedFixed } = (getItem() || {})
+    if (storedExcludeKeySet) {
+      setExcludeKeySet(new Set(storedExcludeKeySet))
+    }
+    if (storedColumnKeys) {
+      setColumnKeys(storedColumnKeys)
+    }
+    if (storedChildrenMapKeys) {
+      setChildrenMapKeys(storedChildrenMapKeys)
+    }
+    if (storedFixed) {
+      setFixed({
+        left: new Set(storedFixed.left),
+        right: new Set(storedFixed.right),
+      })
+    }
+  }, [])
+
+
   if (use) {
     return {
       columns: columns
@@ -244,6 +290,7 @@ export const useControlColumns = (
       setExcludeKeySet,
       fixed,
       setFixed,
+      setItem,
     }
   }
   return {
@@ -256,5 +303,6 @@ export const useControlColumns = (
     setExcludeKeySet,
     fixed,
     setFixed,
+    setItem,
   }
 }

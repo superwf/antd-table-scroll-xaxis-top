@@ -43,3 +43,23 @@
   transform: scaleX(-1);
   display: inline-block;
 }
+
+.atsxt-radio-wrapper {
+  position: relative;
+}
+.atsxt-radio-wrapper .reset {
+  position: absolute;
+  display: inline-block;
+  cursor: pointer;
+  z-index: -1;
+  right: 0;
+  opacity: 0;
+  transition: all 0.2s;
+  /* transform: translateX(-1em); */
+}
+
+.atsxt-radio-wrapper:hover .reset {
+  opacity: 1;
+  z-index: 1;
+  right: -20px;
+}

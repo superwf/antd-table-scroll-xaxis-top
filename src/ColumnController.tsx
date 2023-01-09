@@ -25,41 +25,45 @@ const ColChecker: React.FC<
   const fixedCheckValue = getFixed(fixed, colKey)
   return (
     <div className="atsxt-controller-label" ref={setNodeRef} style={style} {...attributes}>
-      <Radio.Group
-        size="small"
-        optionType="button"
-        options={
-          fixedCheckValue
-            ? [
-                ...FIXED_OPTION,
-                {
-                  label: '✖️',
-                  value: undefined as any,
-                },
-              ]
-            : FIXED_OPTION
-        }
-        buttonStyle="solid"
-        value={fixedCheckValue}
-        onChange={e => {
-          const v = e.target.value
-          if (v === undefined) {
-            fixed.left.delete(colKey)
-            fixed.right.delete(colKey)
-          } else if (v === 'left') {
-            fixed.left.add(colKey)
-            fixed.right.delete(colKey)
-          } else if (v === 'right') {
-            fixed.left.delete(colKey)
-            fixed.right.add(colKey)
-          }
-          setFixed({
-            left: fixed.left,
-            right: fixed.right,
-          })
-        }}
-      />
-      <br />
+      <div className="atsxt-radio-wrapper">
+        {fixedCheckValue && (
+          <span
+            title="取消固定"
+            onClick={() => {
+              fixed.left.delete(colKey)
+              fixed.right.delete(colKey)
+              setFixed({
+                left: fixed.left,
+                right: fixed.right,
+              })
+            }}
+            className="reset"
+          >
+            ✖️
+          </span>
+        )}
+        <Radio.Group
+          size="small"
+          optionType="button"
+          options={FIXED_OPTION}
+          buttonStyle="solid"
+          value={fixedCheckValue}
+          onChange={e => {
+            const v = e.target.value
+            if (v === 'left') {
+              fixed.left.add(colKey)
+              fixed.right.delete(colKey)
+            } else if (v === 'right') {
+              fixed.left.delete(colKey)
+              fixed.right.add(colKey)
+            }
+            setFixed({
+              left: fixed.left,
+              right: fixed.right,
+            })
+          }}
+        />
+      </div>
       <input
         className="atsxt-controller-checkbox"
         type="checkbox"

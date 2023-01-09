@@ -7,6 +7,7 @@ export interface Props extends React.HTMLAttributes<HTMLDivElement> {
   children: ReactElement<any>
 
   controlColumns?: boolean
+  storeKey?: string
 }
 
 export type TablePropsAny = TableProps<any>

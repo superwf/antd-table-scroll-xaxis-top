@@ -1,6 +1,6 @@
 import React from 'react'
 import { SettingOutlined } from '@ant-design/icons'
-import { Popover } from 'antd'
+import { Popover, Button } from 'antd'
 
 import { Props } from './type'
 import { useTableTopScroll, useControlColumns } from './hook'
@@ -27,7 +27,13 @@ import './style.css'
  *  </ScrollOnTableTop>
  * ```
  * */
-export const AntdTableScrollXaxisTop: React.FC<Props> = ({ children, debugName, controlColumns, ...props }) => {
+export const AntdTableScrollXaxisTop: React.FC<Props> = ({
+  children,
+  debugName,
+  controlColumns,
+  storeKey,
+  ...props
+}) => {
   const { tableAriaId, wrapperRef, scrollBarWrapperRef, topScrollListener, scrollBarRef } = useTableTopScroll({
     debugName,
     children,
@@ -41,8 +47,9 @@ export const AntdTableScrollXaxisTop: React.FC<Props> = ({ children, debugName, 
     setChildrenMapKeys,
     fixed,
     setFixed,
+    setItem,
     ...controlColumnProps
-  } = useControlColumns(controlColumns, children)
+  } = useControlColumns(controlColumns, children, storeKey)
   if (children && React.isValidElement(children)) {
     const table = React.cloneElement<Record<string, any>>(children as any)
     const tableId = table.props.id || tableAriaId
@@ -62,7 +69,27 @@ export const AntdTableScrollXaxisTop: React.FC<Props> = ({ children, debugName, 
         </div>
         <table.type id={tableId} {...table.props} {...controlColumnProps} />
         <Popover
-          title="表格设置"
+          title={
+            <>
+              表格设置：拖拽字段标题可调整顺序{' '}
+              <Button
+                onClick={() => {
+                  setItem({
+                    excludeKeySet: Array.from(excludeKeySet),
+                    columnKeys,
+                    childrenMapKeys,
+                    fixed: {
+                      left: Array.from(fixed.left),
+                      right: Array.from(fixed.right),
+                    },
+                  })
+                }}
+                size="small"
+              >
+                保存配置
+              </Button>
+            </>
+          }
           content={
             <ColumnController
               excludeKeySet={excludeKeySet}
