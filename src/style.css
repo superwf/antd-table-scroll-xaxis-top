@@ -11,12 +11,12 @@
   display: flex;
   column-gap: 4px;
 
-  opacity: 0;
-  visibility: hidden;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-  height: 0;
   overflow: hidden;
   padding: 0.5em;
+  /* visibility: hidden; */
+  opacity: 1;
+  /* height: 0; */
 }
 /* .atsxt-controller:hover { */
 /* } */
@@ -42,6 +42,7 @@
 }
 .atsxt-controller-label {
   white-space: nowrap;
+  display: inline-block;
 }
 
 .atsxt-center {

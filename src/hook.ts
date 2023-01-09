@@ -4,7 +4,7 @@ import type { UIEventHandler } from 'react'
 import { Props, TablePropsAny, UseControlColumnsReturn } from './type'
 import { syncScrollLeft, getUniqId } from './helper'
 import { lock } from './lock'
-import { getKey } from './tool'
+import { getKey, sortColByColumnKeys } from './tool'
 
 /** capsule all scroll logic in a hook */
 export const useTableTopScroll = ({ debugName }: Props) => {
@@ -157,27 +157,29 @@ export const useControlColumns = (
 
   if (use) {
     return {
-      columns: (columns || []).reduce((r, c: any) => {
-        const colKey = getKey(c)
-        if (c.children) {
-          const newChildren = c.children.reduce((childrenResult: any[], child: any) => {
-            const key = getKey(child)
-            if (!excludeKeySet.has(key)) {
-              childrenResult.push(child)
+      columns: (columns || [])
+        .reduce((r, c: any) => {
+          const colKey = getKey(c)
+          if (c.children) {
+            const newChildren = c.children.reduce((childrenResult: any[], child: any) => {
+              const key = getKey(child)
+              if (!excludeKeySet.has(key)) {
+                childrenResult.push(child)
+              }
+              return childrenResult
+            }, [] as any[])
+            if (newChildren.length > 0) {
+              r.push({
+                ...c,
+                children: newChildren,
+              })
             }
-            return childrenResult
-          }, [] as any[])
-          if (newChildren.length > 0) {
-            r.push({
-              ...c,
-              children: newChildren,
-            })
+          } else if (!excludeKeySet.has(colKey)) {
+            r.push(c)
           }
-        } else if (!excludeKeySet.has(colKey)) {
-          r.push(c)
-        }
-        return r
-      }, [] as any[]),
+          return r
+        }, [] as any[])
+        .sort(sortColByColumnKeys(columnKeys)),
       columnKeys,
       childrenMapKeys,
       setColumnKeys,
