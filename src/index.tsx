@@ -1,9 +1,11 @@
 import React from 'react'
+import { SettingOutlined } from '@ant-design/icons'
+import { Popover } from 'antd'
 
 import { Props } from './type'
 import { useTableTopScroll, useControlColumns } from './hook'
 import { ColumnController } from './ColumnController'
-import { errorText } from './constant'
+import { ERROR_TEXT } from './constant'
 import './style.css'
 
 /**
@@ -37,6 +39,8 @@ export const AntdTableScrollXaxisTop: React.FC<Props> = ({ children, debugName, 
     setColumnKeys,
     childrenMapKeys,
     setChildrenMapKeys,
+    fixed,
+    setFixed,
     ...controlColumnProps
   } = useControlColumns(controlColumns, children)
   if (children && React.isValidElement(children)) {
@@ -57,20 +61,31 @@ export const AntdTableScrollXaxisTop: React.FC<Props> = ({ children, debugName, 
           <div ref={scrollBarRef} className="atsxt-scroll-bar" />
         </div>
         <table.type id={tableId} {...table.props} {...controlColumnProps} />
-        <ColumnController
-          excludeKeySet={excludeKeySet}
-          setExcludeKeySet={setExcludeKeySet}
-          columns={originColumns}
-          columnKeys={columnKeys}
-          setColumnKeys={setColumnKeys}
-          childrenMapKeys={childrenMapKeys}
-          setChildrenMapKeys={setChildrenMapKeys}
-        />
+        <Popover
+          title="表格设置"
+          content={
+            <ColumnController
+              excludeKeySet={excludeKeySet}
+              setExcludeKeySet={setExcludeKeySet}
+              columns={originColumns}
+              columnKeys={columnKeys}
+              setColumnKeys={setColumnKeys}
+              childrenMapKeys={childrenMapKeys}
+              setChildrenMapKeys={setChildrenMapKeys}
+              fixed={fixed}
+              setFixed={setFixed}
+            />
+          }
+          trigger={['click']}
+          placement="left"
+        >
+          <SettingOutlined className="atsxt-control-setting" />
+        </Popover>
       </div>
     )
   }
   if (process.env.NODE_ENV !== 'production') {
-    console.error(errorText)
+    console.error(ERROR_TEXT)
   }
   return null
 }

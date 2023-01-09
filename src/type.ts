@@ -11,6 +11,8 @@ export interface Props extends React.HTMLAttributes<HTMLDivElement> {
 
 export type TablePropsAny = TableProps<any>
 
+export type FixedColSet = { left: Set<string>; right: Set<string> }
+
 export type UseControlColumnsProps = {
   excludeKeySet: Set<string>
   setExcludeKeySet: (s: Set<string>) => void
@@ -18,6 +20,8 @@ export type UseControlColumnsProps = {
   setColumnKeys: (k: string[]) => void
   childrenMapKeys: Record<string, string[]>
   setChildrenMapKeys: (r: Record<string, string[]>) => void
+  fixed: FixedColSet
+  setFixed: (v: any) => void
 }
 
 export type UseControlColumnsReturn = TablePropsAny & UseControlColumnsProps
@@ -30,4 +34,6 @@ export type ColumnControllerProps = {
   setChildrenMapKeys: (r: Record<string, string[]>) => void
   excludeKeySet: Set<string>
   setExcludeKeySet: (s: Set<string>) => void
+  fixed: FixedColSet
+  setFixed: (v: any) => void
 } & React.HTMLAttributes<HTMLDivElement>

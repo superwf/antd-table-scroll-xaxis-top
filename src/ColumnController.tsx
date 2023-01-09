@@ -2,42 +2,64 @@
 import React from 'react'
 import type { ColumnGroupType } from 'antd/lib/table/interface'
 import type { DndContextProps } from '@dnd-kit/core'
+import { Radio } from 'antd'
 import { CSS } from '@dnd-kit/utilities'
-import {
-  DndContext,
-  // closestCenter,
-  closestCorners,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core'
+import { DndContext, closestCorners, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { useSortable, arrayMove, SortableContext, rectSortingStrategy } from '@dnd-kit/sortable'
 
 import { ColumnControllerProps, UseControlColumnsProps } from './type'
-import { getKey, sortColByColumnKeys } from './tool'
+import { getKey, sortColByColumnKeys, getFixed } from './tool'
+import { FIXED_OPTION } from './constant'
 
 const ColChecker: React.FC<
   {
     colKey: string
     col: any
   } & UseControlColumnsProps
-> = ({
-  colKey,
-  col,
-  columnKeys,
-  setColumnKeys,
-  childrenMapKeys,
-  setChildrenMapKeys,
-  excludeKeySet,
-  setExcludeKeySet,
-}) => {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: String(colKey) })
+> = ({ colKey, col, excludeKeySet, setExcludeKeySet, fixed, setFixed }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: colKey })
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
   }
+  const fixedCheckValue = getFixed(fixed, colKey)
   return (
     <div className="atsxt-controller-label" ref={setNodeRef} style={style} {...attributes}>
+      <Radio.Group
+        size="small"
+        optionType="button"
+        options={
+          fixedCheckValue
+            ? [
+                ...FIXED_OPTION,
+                {
+                  label: '✖️',
+                  value: undefined as any,
+                },
+              ]
+            : FIXED_OPTION
+        }
+        buttonStyle="solid"
+        value={fixedCheckValue}
+        onChange={e => {
+          const v = e.target.value
+          if (v === undefined) {
+            fixed.left.delete(colKey)
+            fixed.right.delete(colKey)
+          } else if (v === 'left') {
+            fixed.left.add(colKey)
+            fixed.right.delete(colKey)
+          } else if (v === 'right') {
+            fixed.left.delete(colKey)
+            fixed.right.add(colKey)
+          }
+          setFixed({
+            left: fixed.left,
+            right: fixed.right,
+          })
+        }}
+      />
+      <br />
       <input
         className="atsxt-controller-checkbox"
         type="checkbox"
@@ -53,7 +75,9 @@ const ColChecker: React.FC<
         defaultChecked={!excludeKeySet.has(colKey)}
         value={colKey}
       />
-      <span {...listeners}>{col.title}</span>
+      <span className="atsxt-dragable" {...listeners}>
+        {col.title}
+      </span>
     </div>
   )
 }
@@ -72,6 +96,8 @@ const ColCheckerChildren: React.FC<
   setChildrenMapKeys,
   excludeKeySet,
   setExcludeKeySet,
+  fixed,
+  setFixed,
 }) => {
   const sensors = useSensors(useSensor(PointerSensor))
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: colKey })
@@ -95,8 +121,8 @@ const ColCheckerChildren: React.FC<
   return (
     <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={onChildDragEnd}>
       <SortableContext id={colKey} items={childrenMapKeys[colKey] || []} strategy={rectSortingStrategy}>
-        <div ref={setNodeRef} style={style} {...attributes}>
-          <div className="atsxt-center" {...listeners}>
+        <div ref={setNodeRef} style={{ ...style, textAlign: 'center' }} {...attributes}>
+          <div className="atsxt-center atsxt-dragable" {...listeners}>
             {col.title}
           </div>
           {col.children.sort(sortColByColumnKeys(childrenMapKeys[colKey])).map(child => {
@@ -112,6 +138,8 @@ const ColCheckerChildren: React.FC<
                 setChildrenMapKeys={setChildrenMapKeys}
                 excludeKeySet={excludeKeySet}
                 setExcludeKeySet={setExcludeKeySet}
+                fixed={fixed}
+                setFixed={setFixed}
               />
             )
           })}
@@ -130,6 +158,8 @@ export const ColumnController: React.FC<ColumnControllerProps> = ({
   excludeKeySet,
   setExcludeKeySet,
   id,
+  fixed,
+  setFixed,
   ...props
 }) => {
   const sensors = useSensors(useSensor(PointerSensor))
@@ -137,7 +167,6 @@ export const ColumnController: React.FC<ColumnControllerProps> = ({
 
   const onDragEnd: DndContextProps['onDragEnd'] = event => {
     const { active, over } = event
-    console.log(active.id, over && over.id)
     if (over && active.id !== over.id) {
       const items = [...columnKeys]
       const oldIndex = items.indexOf(active.id as string)
@@ -155,6 +184,7 @@ export const ColumnController: React.FC<ColumnControllerProps> = ({
             if ((col as ColumnGroupType<any>).children) {
               return (
                 <ColCheckerChildren
+                  key={key}
                   colKey={key}
                   col={col as ColumnGroupType<any>}
                   columnKeys={columnKeys}
@@ -163,6 +193,8 @@ export const ColumnController: React.FC<ColumnControllerProps> = ({
                   setChildrenMapKeys={setChildrenMapKeys}
                   excludeKeySet={excludeKeySet}
                   setExcludeKeySet={setExcludeKeySet}
+                  fixed={fixed}
+                  setFixed={setFixed}
                 />
               )
             }
@@ -177,6 +209,8 @@ export const ColumnController: React.FC<ColumnControllerProps> = ({
                 setChildrenMapKeys={setChildrenMapKeys}
                 excludeKeySet={excludeKeySet}
                 setExcludeKeySet={setExcludeKeySet}
+                fixed={fixed}
+                setFixed={setFixed}
               />
             )
           })}

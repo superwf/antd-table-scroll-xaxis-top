@@ -4,7 +4,8 @@ import type { UIEventHandler } from 'react'
 import { Props, TablePropsAny, UseControlColumnsReturn } from './type'
 import { syncScrollLeft, getUniqId } from './helper'
 import { lock } from './lock'
-import { getKey, sortColByColumnKeys } from './tool'
+import { getKey, sortColByColumnKeys, getFixed } from './tool'
+import { EMPTY_COLUMNS } from './constant'
 
 /** capsule all scroll logic in a hook */
 export const useTableTopScroll = ({ debugName }: Props) => {
@@ -136,46 +137,101 @@ export const useTableTopScroll = ({ debugName }: Props) => {
 
 export const useControlColumns = (
   use: boolean | undefined,
-  children: React.ReactElement<any>,
+  children: React.ReactElement<TablePropsAny>,
 ): UseControlColumnsReturn => {
-  const columns = (children.props as TablePropsAny).columns || []
+  const columns = children.props.columns || EMPTY_COLUMNS
   // 控制是否显示column
   const [excludeKeySet, setExcludeKeySet] = useState(new Set<string>())
 
+  const initialColumnKeys = useMemo(() => columns.map(getKey), [columns])
+
   // 控制一级column排序
-  const [columnKeys, setColumnKeys] = useState<UseControlColumnsReturn['columnKeys']>((columns || []).map(getKey))
-  // 控制children column排序
-  const [childrenMapKeys, setChildrenMapKeys] = useState(
-    columns.reduce((r, c: any) => {
-      const key = getKey(c)
-      if (c.children && Array.isArray(c.children)) {
-        r[key] = c.children.map(getKey)
-      }
-      return r
-    }, {} as UseControlColumnsReturn['childrenMapKeys']),
+  const [columnKeys, setColumnKeys] = useState<UseControlColumnsReturn['columnKeys']>(initialColumnKeys)
+
+  const initialChildrenMapKeys = useMemo(
+    () =>
+      columns.reduce((r, c: any) => {
+        const key = getKey(c)
+        if (c.children && Array.isArray(c.children)) {
+          r[key] = c.children.map(getKey)
+        }
+        return r
+      }, {} as UseControlColumnsReturn['childrenMapKeys']),
+    [columns],
   )
+  // 控制children column排序
+  const [childrenMapKeys, setChildrenMapKeys] = useState(initialChildrenMapKeys)
+
+  const initialFixed = useMemo(
+    () => ({
+      left: new Set<string>(
+        columns.flatMap(col => {
+          const keys: string[] = []
+          if ((col as any).children) {
+            ;(col as any).children.forEach((c: any) => {
+              if (c.fixed === true || c.fixed === 'left') {
+                keys.push(getKey(c))
+              }
+            })
+          }
+          if (col.fixed === true || col.fixed === 'left') {
+            keys.push(getKey(col))
+          }
+          return keys
+        }),
+      ),
+      right: new Set<string>(
+        columns.flatMap(col => {
+          const keys: string[] = []
+          if ((col as any).children) {
+            ;(col as any).children.forEach((c: any) => {
+              if (c.fixed === 'right') {
+                keys.push(getKey(c))
+              }
+            })
+          }
+          if (col.fixed === 'right') {
+            keys.push(getKey(col))
+          }
+          return keys
+        }),
+      ),
+    }),
+    [columns],
+  )
+
+  const [fixed, setFixed] = useState(initialFixed)
 
   if (use) {
     return {
-      columns: (columns || [])
+      columns: columns
         .reduce((r, c: any) => {
           const colKey = getKey(c)
           if (c.children) {
-            const newChildren = c.children.reduce((childrenResult: any[], child: any) => {
-              const key = getKey(child)
-              if (!excludeKeySet.has(key)) {
-                childrenResult.push(child)
-              }
-              return childrenResult
-            }, [] as any[])
+            const newChildren = c.children
+              .reduce((childrenResult: any[], child: any) => {
+                const key = getKey(child)
+                if (!excludeKeySet.has(key)) {
+                  childrenResult.push({
+                    ...child,
+                    fixed: getFixed(fixed, key),
+                  })
+                }
+                return childrenResult
+              }, [] as any[])
+              .sort(sortColByColumnKeys(childrenMapKeys[colKey]))
             if (newChildren.length > 0) {
               r.push({
                 ...c,
                 children: newChildren,
+                fixed: getFixed(fixed, colKey),
               })
             }
           } else if (!excludeKeySet.has(colKey)) {
-            r.push(c)
+            r.push({
+              ...c,
+              fixed: getFixed(fixed, colKey),
+            })
           }
           return r
         }, [] as any[])
@@ -186,7 +242,19 @@ export const useControlColumns = (
       setChildrenMapKeys,
       excludeKeySet,
       setExcludeKeySet,
+      fixed,
+      setFixed,
     }
   }
-  return { columns, columnKeys, childrenMapKeys, setColumnKeys, setChildrenMapKeys, excludeKeySet, setExcludeKeySet }
+  return {
+    columns,
+    columnKeys,
+    childrenMapKeys,
+    setColumnKeys,
+    setChildrenMapKeys,
+    excludeKeySet,
+    setExcludeKeySet,
+    fixed,
+    setFixed,
+  }
 }

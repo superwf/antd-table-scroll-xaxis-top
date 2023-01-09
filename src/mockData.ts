@@ -5,17 +5,21 @@ export const columns: any = Array(6)
       title: `title${i + 1}`,
       dataIndex: `title${i + 1}`,
       width: 400,
-      fixed: i > 4 ? 'right' : undefined,
+      align: 'center',
+      // fixed: i === 4 ? 'right' : undefined,
     }
     if (i < 2) {
       col.children = [
         {
           title: `title${i + 1}-1`,
           width: 300,
-          dataIndex: `title${i + 1}`,
+          align: 'center',
+          dataIndex: `title${i + 1}-1`,
+          fixed: i === 0,
         },
         {
           title: `title${i + 1}-2`,
+          align: 'center',
           width: 300,
           dataIndex: `title${i + 1}-2`,
         },

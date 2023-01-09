@@ -2,31 +2,9 @@
   position: relative;
 }
 .atsxt-controller {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%) translateY(-100%);
-  border: 1px solid black;
   z-index: 10;
   display: flex;
-  column-gap: 4px;
-
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-  overflow: hidden;
-  padding: 0.5em;
-  /* visibility: hidden; */
-  opacity: 1;
-  /* height: 0; */
-}
-/* .atsxt-controller:hover { */
-/* } */
-
-.atsxt-wrapper:hover .atsxt-controller {
-  z-index: 10;
-  opacity: 1;
-  visibility: visible;
-  transition: all 0.5s cubic-bezier(0.75, -0.02, 0.2, 0.97);
-  height: auto;
+  column-gap: 8px;
 }
 
 .atsxt-controller-checkbox {
@@ -43,8 +21,25 @@
 .atsxt-controller-label {
   white-space: nowrap;
   display: inline-block;
+  padding-right: 5px;
+}
+.atsxt-dragable {
+  cursor: move;
 }
 
 .atsxt-center {
   text-align: center;
+}
+
+.atsxt-control-setting {
+  position: absolute;
+  right: 10px;
+  top: 20px;
+  z-index: 5;
+  cursor: pointer;
+}
+
+.atsxt-fix-column-right {
+  transform: scaleX(-1);
+  display: inline-block;
 }

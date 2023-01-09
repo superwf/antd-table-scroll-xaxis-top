@@ -6,7 +6,7 @@ import * as React from 'react'
 
 import { assertIsDefined } from './assertIsDefined'
 import { columns, dataSource } from './mockData'
-import { errorText } from './constant'
+import { ERROR_TEXT } from './constant'
 import { sleep } from './sleep'
 
 import { AntdTableScrollXaxisTop } from '.'
@@ -125,7 +125,7 @@ describe('AntdTableScrollXaxisTop', () => {
       )
 
       expect(consoleError).toHaveBeenCalledTimes(1)
-      expect(consoleError).toHaveBeenCalledWith(errorText)
+      expect(consoleError).toHaveBeenCalledWith(ERROR_TEXT)
 
       const app2 = render(<Wrapper />)
       expect(consoleError).toHaveBeenCalledTimes(2)
