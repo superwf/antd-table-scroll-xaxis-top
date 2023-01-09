@@ -11,13 +11,23 @@ export interface Props extends React.HTMLAttributes<HTMLDivElement> {
 
 export type TablePropsAny = TableProps<any>
 
-export type UseControlColumnsReturn = TablePropsAny & {
-  keySet: Set<string>
-  setKeySet: (s: Set<string>) => void
+export type UseControlColumnsProps = {
+  excludeKeySet: Set<string>
+  setExcludeKeySet: (s: Set<string>) => void
+  columnKeys: string[]
+  setColumnKeys: (k: string[]) => void
+  childrenMapKeys: Record<string, string[]>
+  setChildrenMapKeys: (r: Record<string, string[]>) => void
 }
+
+export type UseControlColumnsReturn = TablePropsAny & UseControlColumnsProps
 
 export type ColumnControllerProps = {
   columns: Exclude<TablePropsAny['columns'], undefined>
-  keySet: Set<string>
-  setKeySet: (s: Set<string>) => void
+  columnKeys: string[]
+  setColumnKeys: (k: string[]) => void
+  childrenMapKeys: Record<string, string[]>
+  setChildrenMapKeys: (r: Record<string, string[]>) => void
+  excludeKeySet: Set<string>
+  setExcludeKeySet: (s: Set<string>) => void
 } & React.HTMLAttributes<HTMLDivElement>

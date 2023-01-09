@@ -30,7 +30,7 @@ export const AntdTableScrollXaxisTop: React.FC<Props> = ({ children, debugName, 
     debugName,
     children,
   })
-  const { keySet, setKeySet, ...controlColumnProps } = useControlColumns(controlColumns, children)
+  const { excludeKeySet, setExcludeKeySet, ...controlColumnProps } = useControlColumns(controlColumns, children)
   if (children && React.isValidElement(children)) {
     const table = React.cloneElement<Record<string, any>>(children as any)
     const tableId = table.props.id || tableAriaId
@@ -49,7 +49,7 @@ export const AntdTableScrollXaxisTop: React.FC<Props> = ({ children, debugName, 
           <div ref={scrollBarRef} className="atsxt-scroll-bar" />
         </div>
         <table.type id={tableId} {...table.props} {...controlColumnProps} />
-        <ColumnController keySet={keySet} setKeySet={setKeySet} columns={originColumns} />
+        <ColumnController excludeKeySet={excludeKeySet} setExcludeKeySet={setExcludeKeySet} columns={originColumns} />
       </div>
     )
   }

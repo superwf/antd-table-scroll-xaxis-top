@@ -4,6 +4,7 @@ import type { UIEventHandler } from 'react'
 import { Props, TablePropsAny, UseControlColumnsReturn } from './type'
 import { syncScrollLeft, getUniqId } from './helper'
 import { lock } from './lock'
+import { getKey } from './tool'
 
 /** capsule all scroll logic in a hook */
 export const useTableTopScroll = ({ debugName }: Props) => {
@@ -137,34 +138,50 @@ export const useControlColumns = (
   use: boolean | undefined,
   children: React.ReactElement<any>,
 ): UseControlColumnsReturn => {
-  const { columns } = children.props as TablePropsAny
-  // const [showControl, setShowControl] = useState(false)
+  const columns = (children.props as TablePropsAny).columns || []
+  const [excludeKeySet, setExcludeKeySet] = useState(new Set<string>())
 
-  const [keySet, setKeySet] = useState(new Set<string>())
+  const [columnKeys, setColumnKeys] = useState<UseControlColumnsReturn['columnKeys']>((columns || []).map(getKey))
+  const [childrenMapKeys, setChildrenMapKeys] = useState(
+    columns.reduce((r, c: any) => {
+      const key = getKey(c)
+      if (c.children && Array.isArray(c.children)) {
+        r[key] = c.children.map(getKey)
+      }
+      return r
+    }, {} as UseControlColumnsReturn['childrenMapKeys']),
+  )
 
   if (use) {
     return {
-      columns: (columns || []).filter((c: any) => {
-        const key = c.key || c.dataIndex
-        return !keySet.has(key)
-      }),
-      // onHeaderRow() {
-      //   return {
-      //     onMouseEnter() {
-      //       setShowControl(true)
-      //     },
-      //     onMouseLeave: debounce(() => {
-      //       setTimeout(() => {
-      //         setShowControl(false)
-      //       }, 600)
-      //     }, 600),
-      //   }
-      // },
-      // showControl,
-      // setShowControl,
-      keySet,
-      setKeySet,
+      columns: (columns || []).reduce((r, c: any) => {
+        const colKey = getKey(c)
+        if (c.children) {
+          const newChildren = c.children.reduce((childrenResult: any[], child: any) => {
+            const key = getKey(child)
+            if (!excludeKeySet.has(key)) {
+              childrenResult.push(child)
+            }
+            return childrenResult
+          }, [] as any[])
+          if (newChildren.length > 0) {
+            r.push({
+              ...c,
+              children: newChildren,
+            })
+          }
+        } else if (!excludeKeySet.has(colKey)) {
+          r.push(c)
+        }
+        return r
+      }, [] as any[]),
+      columnKeys,
+      childrenMapKeys,
+      setColumnKeys,
+      setChildrenMapKeys,
+      excludeKeySet,
+      setExcludeKeySet,
     }
   }
-  return { columns, keySet, setKeySet }
+  return { columns, columnKeys, childrenMapKeys, setColumnKeys, setChildrenMapKeys, excludeKeySet, setExcludeKeySet }
 }
