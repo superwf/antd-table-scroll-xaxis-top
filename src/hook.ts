@@ -139,9 +139,12 @@ export const useControlColumns = (
   children: React.ReactElement<any>,
 ): UseControlColumnsReturn => {
   const columns = (children.props as TablePropsAny).columns || []
+  // 控制是否显示column
   const [excludeKeySet, setExcludeKeySet] = useState(new Set<string>())
 
+  // 控制一级column排序
   const [columnKeys, setColumnKeys] = useState<UseControlColumnsReturn['columnKeys']>((columns || []).map(getKey))
+  // 控制children column排序
   const [childrenMapKeys, setChildrenMapKeys] = useState(
     columns.reduce((r, c: any) => {
       const key = getKey(c)

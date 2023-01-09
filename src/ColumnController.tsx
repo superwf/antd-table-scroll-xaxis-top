@@ -61,12 +61,16 @@ export const ColumnController: React.FC<ColumnControllerProps> = ({
           <div>
             <div className="atsxt-center">{col.title}</div>
             {children.map(child => {
-              const key = child.key || (child as any).dataIndex
+              const key = getKey(child)
               return (
                 <ColChecker
                   key={key}
                   colKey={key}
                   col={child}
+                  columnKeys={columnKeys}
+                  setColumnKeys={setColumnKeys}
+                  childrenMapKeys={childrenMapKeys}
+                  setChildrenMapKeys={setChildrenMapKeys}
                   excludeKeySet={excludeKeySet}
                   setExcludeKeySet={setExcludeKeySet}
                 />
@@ -75,12 +79,16 @@ export const ColumnController: React.FC<ColumnControllerProps> = ({
           </div>
         )
       }
-      const key = col.key || (col as any).dataIndex
+      const key = getKey(col)
       return (
         <ColChecker
           key={key}
           colKey={key}
           col={col}
+          columnKeys={columnKeys}
+          setColumnKeys={setColumnKeys}
+          childrenMapKeys={childrenMapKeys}
+          setChildrenMapKeys={setChildrenMapKeys}
           excludeKeySet={excludeKeySet}
           setExcludeKeySet={setExcludeKeySet}
         />
