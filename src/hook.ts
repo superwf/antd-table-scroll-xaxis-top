@@ -99,10 +99,12 @@ export const useTableTopScroll = ({ debugName }: Props) => {
     if (wrapper) {
       const innerTableDoms = wrapper.querySelectorAll(`table`)
       // Search for proper Table element in case of using fixed columns in Antd Table
-      const innerTableDom = (innerTableDoms.length>1 && innerTableDoms[1].parentElement!=undefined &&innerTableDoms[1].parentElement.className.indexOf("ant-table-body-inner")==-1 ) 
-                            ? innerTableDoms[1]
-                            : innerTableDoms[0] ;
-      //
+      const innerTableDom =
+        innerTableDoms.length > 1 &&
+        innerTableDoms[1].parentElement &&
+        innerTableDoms[1].parentElement.classList.contains('ant-table-body-inner')
+          ? innerTableDoms[1]
+          : innerTableDoms[0]
       if (!innerTableDom) {
         if (debugName) {
           log(`"table" not found, make sure has antd Table component as children`)
